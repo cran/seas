@@ -1,0 +1,27 @@
+Please submit any suggestions or errors to me <mwtoews@sfu.ca>
+
+Version 0.1-3
+2006-03-14
+ - added .seascol and changed hplot functions to accommodate modular
+	colouring styles
+ - re-tabbed everything in Emacs
+ - renamed package from 'climate.plot' to 'seas'
+ - made 'mkfact' a bit more flexible, looks for Date/POSIXct classes
+ - made '.seasmonthgrid' in hidden.R
+ - added new style to accommodate no title
+ - restructured 'seas.sum' object:
+   - 'days', 'na' are separate 2D arrays (used to be part of 'seas')
+   - 'active' is 3D, and only present if 'a.cut' is non-zero or FALSE
+ - fixed a few bugs in 'seas.norm'; added '...' to 'precip.norm'
+
+Version 0.1-2
+2006-02-13
+ - added 'ZipData: no' for Windows packaging of non-R data
+
+Version 0.1.1
+2006-02-11
+ - removed Unicode for 'mkfact' in-order to work for R CMD check on C locale
+
+Version	0.1
+2006-02-10
+ - first personal version, and submitted to CRAN

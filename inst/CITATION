@@ -1,0 +1,11 @@
+citHeader("To cite package seas in publications use:")
+
+# in progress
+citEntry(entry="unpublished",
+        title = "Seasonal statistics: the 'seas' package for R",
+        author = personList(person("Michael","Toews","W","mwtoews@sfu.ca"),
+		person("Paul","Whitfield","H","paul.whitfield@ec.gc.ca")),
+        textVersion =
+        paste("Toews, M.W., and Whitfield, P.H., in progress, Seasonal statistics: the 'seas' package for R.")
+)
+
