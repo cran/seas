@@ -1,17 +1,17 @@
-\name{plot.seas.param}
-\alias{plot.seas.param}
-\title{Plot seasonal normals of a given parameter}
+\name{plot.seas.var}
+\alias{plot.seas.var}
+\title{Plot seasonal normals of a given variable}
 \description{
-  Plot seasonal normals using boxplots of a given parameter.
+  Plot seasonal normals using boxplots of a given variable.
 }
 \synopsis{
-plot.seas.param(x, start, end, width=11, param,
+plot.seas.var(x, start, end, width=11, var,
   col = "lightgrey", id, ylab, ylim, add.alt, logy=FALSE,...)
 }
 \usage{
-plot.seas.param(x, param)
+plot.seas.var(x, var)
 
-plot.seas.param(x, start, end, width=11, param, 
+plot.seas.var(x, start, end, width=11, var, 
   col = "lightgrey", id, ylab, ylim, add.alt, logy=FALSE,...)
 }
 \arguments{
@@ -20,7 +20,7 @@ plot.seas.param(x, start, end, width=11, param,
   \item{end}{end year; if omitted will use same as \code{start}, and if
     \code{start} is omitted, will use maximum year}
   \item{width}{size of bin; see \code{\link{mkfact}}}
-  \item{param}{a parameter; a column name in \code{x}}
+  \item{var}{a variable; a column name in \code{x}}
   \item{col}{colour for the boxplots; default is \code{"lightgrey"}}
   \item{id}{unique station identifier used to extract a subset of data
     from \code{x}}
@@ -36,21 +36,21 @@ plot.seas.param(x, start, end, width=11, param,
     title style, and other customizations to the appearance}
 }
 \details{
-  Shows normals of a seasonally varying parameter using boxplots.
+  Shows normals of a seasonal variable using boxplots.
 }
 \value{
-  Returns values from \code{\link{boxplot}} statistics on the parameter.
+  Returns values from \code{\link{boxplot}} statistics on the variable.
 }
 \author{M.W. Toews}
 \seealso{\code{\link{plot.seas.norm}}, \code{\link{plot.year}}}
 \examples{
 data(mscdata)
 
-plot.seas.param(mscdata, param="max_t", col="tomato", id=1108447,
+plot.seas.var(mscdata, var="max_t", col="tomato", id=1108447,
   add.alt=c(5/9,32), ylab=c("Maximum temperature, C","F"))
 abline(h=0)
 
-plot.seas.param(subset(mscdata,precip>0), param="precip",
+plot.seas.var(subset(mscdata,precip>0), var="precip",
   col="azure", id=1108447)
 }
 \keyword{hplot}

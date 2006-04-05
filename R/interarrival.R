@@ -1,21 +1,21 @@
 "interarrival" <-
-  function(dat, start, end, param="precip", p.cut = 0.3, inv = FALSE, id) {
+  function(dat, start, end, var="precip", p.cut = 0.3, inv = FALSE, id) {
     orig <- as.character(substitute(dat))
     if(!inherits(dat,"data.frame"))
       stop(gettextf("%s is not a %s object",
                     sQuote(orig),sQuote("data.frame")))
-    if(!param %in% names(dat))
+    if(!var %in% names(dat))
       stop(gettextf("could not find %s in %s",
-                    sQuote(param),
+                    sQuote(var),
                     sQuote(sprintf("names(%s)",orig))))
     if(missing(id)) id <- unique(dat$id)[1]
     if(missing(start)) start <- NULL
     if(missing(end)) end <- start
     dat <- mksub(dat,start,end,id,rm.id=FALSE)
-    dat <- dat[!is.na(dat[,param]),]
+    dat <- dat[!is.na(dat[,var]),]
     dat$diff <- c(0,as.integer(diff(dat$date)))
     n.dat <- nrow(dat)
-    dat$wet <- dat[,param] > p.cut
+    dat$wet <- dat[,var] > p.cut
     if(inv) dat$wet <- !dat$wet
     j <- 0
     date <- dat$date[length=0]

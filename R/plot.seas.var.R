@@ -1,5 +1,5 @@
-"plot.seas.param" <-
-  function(x, start, end, width=11, param, col = "lightgrey", id,
+"plot.seas.var" <-
+  function(x, start, end, width=11, var, col = "lightgrey", id,
            ylab, ylim, add.alt, logy=FALSE, ...) {
     orig <- as.character(substitute(x))
     if(!inherits(x,"data.frame"))
@@ -18,10 +18,10 @@
       warning("no data")
       invisible(NA)
     }
-    if(missing(ylab)) ylab <- param
+    if(missing(ylab)) ylab <- var
     dat$fact <- mkfact(dat,width)
     num <- length(levels(dat$fact))
-    dat$val <- dat[,param]
+    dat$val <- dat[,var]
     plot.new()
     par(yaxs="i",xaxs="r")
     if(missing(add.alt))

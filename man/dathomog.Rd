@@ -37,7 +37,7 @@ dathomog(dat1, dat2, dat, \dots)
 \details{
   Data from \code{dat1} has priority over \code{dat2}.  Where data from
   \code{dat1} is either \code{NA} or missing (outside of range), data
-  from \code{dat2} will be used (if available). Parameters will be
+  from \code{dat2} will be used (if available). Variables will be
   homogenized where their names are identical, found using
   \code{\link{names}}.
 
@@ -50,7 +50,7 @@ dathomog(dat1, dat2, dat, \dots)
 }
 \value{
   Returns a \code{data.frame} of climate data required by most functions
-  in \pkg{seas}. Parameter names of the structure are found by a
+  in \pkg{seas}. Variable names of the structure are found by a
   \code{\link{union}} of the names of \code{dat1} and \code{dat2}. The
   \code{id} column is removed if \code{rm.id = TRUE}.
 }

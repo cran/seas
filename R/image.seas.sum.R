@@ -1,18 +1,19 @@
 "image.seas.sum" <-
-  function(x, start, end, param, norm = "days", maxz, nlevels = 128,
+  function(x, start, end, var, norm = "days", maxz, nlevels = 128,
            maxa, col = .65, dark = 0, gamma = 0.8, sqrt=FALSE, 
            show.na=TRUE, show.median=TRUE, contour=TRUE, ...) {
     old.par <- par(no.readonly=TRUE); on.exit(par(old.par))
-    orig <- as.character(substitute(dat))
+    orig <- as.character(substitute(x))
+    print(orig)
     if(!inherits(x,"seas.sum"))
       stop(gettextf("%s is not a %s object",
                     sQuote(orig),sQuote("seas.sum")))
     dat <- x
-    if(missing(param))
-      param <- dat$prime
-    else if(!(param %in% dat$param))
-      stop(gettextf("%s not found in %s",sQuote(param),
-                    sQuote(sprintf("%s$param",orig))))
+    if(missing(var))
+      var <- dat$prime
+    else if(!(var %in% dat$var))
+      stop(gettextf("%s not found in %s",sQuote(var),
+                    sQuote(sprintf("%s$var",orig))))
     if(norm != "days") {
       if (!missing(show.median))
         warning(gettextf("option %s only works if %s",
@@ -52,13 +53,14 @@
       dat$days <- dat$active <- NULL
       dat$years <- dat$years[s]
     }
-    fun <- sprintf("%s/%s",param,norm)
+    fun <- sprintf("%s/%s",var,norm)
     if(sqrt)
       fun <- sprintf("sqrt(%s)",fun)
     width <- dat$width
     n.years <- length(dat$years)
     if(n.years == 0) {
-      main <- .seastitle(id=dat$id,orig=orig,fun=fun,range=c(start,end),...)
+      main <- .seastitle(id=dat$id,orig=orig,name=dat$name,
+                         fun=fun,range=c(start,end),...)
       frame(); title(main$title); text(.5,.5,gettext("no data"))
       warning("no data")
       return(NA)
@@ -66,13 +68,14 @@
     dat$range <- range(dat$years)
     start <- dat$range[1]
     end <- dat$range[2]
-    main <- .seastitle(id=dat$id,orig=orig,fun=fun,range=dat$range,...)
+    main <- .seastitle(id=dat$id,orig=orig,name=dat$name,
+                       fun=fun,range=dat$range,...)
     num <- length(dat$bins)
     # .b suffix is a matrix of sums in the width of the bin for each year
-    param.b <- dat$seas[,,param,drop=TRUE]
-    norm.b <- dat$norm[,,param,drop=TRUE]
-    seas <- param.b/norm.b
-    seas[!is.na(param.b) & norm.b==0] <- 0 # avoid Inf
+    var.b <- dat$seas[,,var,drop=TRUE]
+    norm.b <- dat$norm[,,var,drop=TRUE]
+    seas <- var.b/norm.b
+    seas[!is.na(var.b) & norm.b==0] <- 0 # avoid Inf
     if(!missing(maxz)) {
       seas[seas > maxz] <- maxz # trim upper values of maximum
       maxl <- TRUE
@@ -92,9 +95,9 @@
       maxz.p <- maxz
     }
     if(show.median) {
-      param.a <- dat$ann[,param]
-      nm <- seas.norm(dat,param=param,fun="median")
-      nm.quan <- nm$quantile[1,param]
+      var.a <- dat$ann[,var]
+      nm <- seas.norm(dat,var=var,fun="median")
+      nm.quan <- nm$quantile[1,var]
       pr <- 0.8 # percent of window is the main plot on left
       nf <- layout(matrix(c(1,1,1,2,5,4,3,6,4),nrow=3,byrow=TRUE),
                    widths=c(pr,1-pr,lcm(1.6)),heights=lcm(main$height))
@@ -157,21 +160,21 @@
     mtext(gettextf("%s/day",dat$unit),4,2.5)
     box()
     if(show.median) {
-      nm.mean <- mean(param.a,na.rm=TRUE)
-      nm.median <- nm$ann[1,param]
+      nm.mean <- mean(var.a,na.rm=TRUE)
+      nm.median <- nm$ann[1,var]
       ann.a <- apply(seas.s,2,quantile,probs=sam.q/100,na.rm=TRUE)
       days.a <- dat$days
       ann.at <- rowSums(ann.a*days.a,na.rm=TRUE)
       sam.q <- c(sam.q,sam.q[length(sam.q)])
       ann.at <- c(ann.at,ann.at[length(ann.at)])
       if(missing(maxa))
-        xlim.a <- c(0,max(param.a,na.rm=TRUE)*0.9+max(ann.at,na.rm=TRUE)*0.1)
+        xlim.a <- c(0,max(var.a,na.rm=TRUE)*0.9+max(ann.at,na.rm=TRUE)*0.1)
       else xlim.a <- c(0,maxa)
-      param.a <- c(param.a,param.a[length(param.a)])
+      var.a <- c(var.a,var.a[length(var.a)])
       years.a <- dat$years
       years.a <- c(years.a,years.a[length(years.a)]+1)
       par(mar=mar4,bg="white")
-      plot(param.a,years.a,type="S",xaxt="n",yaxt="n",xaxs="i",yaxs="i",
+      plot(var.a,years.a,type="S",xaxt="n",yaxt="n",xaxs="i",yaxs="i",
            xlim=xlim.a,ylim=c(start,end+1))
       abline(v=nm.mean,col=col$mean,lwd=col$mean.lwd)
       abline(v=nm.median,col=col$med,lwd=col$med.lwd)

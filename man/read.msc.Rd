@@ -33,8 +33,8 @@ read.msc(file, flags = FALSE, add.elem, format, verbose = TRUE)
   (fifteen-minute) and MLY (monthly), are not currently supported.
   
   The input file can include multiple stations and multiple elements
-  (measured parameters). The multiple stations are deciphered through
-  the \code{id} column, and the multiple parameters appear as columns to
+  (measured variables). The multiple stations are deciphered through
+  the \code{id} column, and the multiple variables appear as columns to
   the output data frame.
   
   This function currently only reads a limited number of elements,
@@ -144,7 +144,7 @@ dlydat$na <- as.integer(sumdat)
 # quality control to remove days with less than 4 hours missing
 Summerland <- dlydat[dlydat$na < 4,]
 
-plot.seas.param(Summerland,param="solar", col="yellow", width=5,
+plot.seas.var(Summerland,var="solar", col="yellow", width=5,
          ylab="Daily total global solar radiation (W/(m^2*day)")
 }
 }

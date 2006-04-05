@@ -2,10 +2,11 @@
 \alias{image.seas.sum}
 \title{Show a seasonal sum data object}
 \description{
-  Graphically display a seasonal sum object.
+  Graphically display a seasonal sum object, as well as the method of
+  solution of the median/quantile \sQuote{normal}
 }
 \usage{
-\method{image}{seas.sum}(x, start, end, param, norm = "days", maxz, nlevels = 128,
+\method{image}{seas.sum}(x, start, end, var, norm = "days", maxz, nlevels = 128,
       maxa, col = .65, dark = 0, gamma = 0.8, sqrt = FALSE, 
       show.na = TRUE, show.median = TRUE, contour = TRUE, \ldots)
 }
@@ -14,9 +15,9 @@
   \item{start}{start year; if omitted minimum year will be used}
   \item{end}{end year; if omitted will use same as \code{start}, and if
     \code{start} is omitted, will use maximum year}
-  \item{param}{the desired parameter show, otherwise will use the prime
-    parameter, defined in \code{x}}
-  \item{norm}{parameter to normalize by, usually \code{"days"}, to
+  \item{var}{the desired variable to show, otherwise will use the prime
+    variable, defined in \code{x}}
+  \item{norm}{variable to normalize by, usually \code{"days"}, to
     produce \emph{unit/day}}
   \item{maxz}{maximum value to be displayed}
   \item{nlevels}{number of colour levels}
@@ -42,6 +43,12 @@
   and is far more informative than a traditional precipitation
   \dQuote{normal} (i.e., \code{\link{precip.norm}} or
   \code{\link{precip.norm}})
+
+  If \code{norm = "days"} and \code{show.median = TRUE} (default), the
+  seasonal sums appear in right-hand frames. Horizontal and vertical
+  lines indicate a \sQuote{normal} from the image, whereby the sum of
+  the quantile is equal to the median of the annual ammount. This
+  numerical solution is found using \code{\link{seas.norm}}.
 }
 \author{M.W. Toews}
 \seealso{\code{\link{seas.sum}}, \code{\link{seas.norm}}}
@@ -50,5 +57,10 @@ data(mscdata)
 
 dat.ss <- seas.sum(mscdata, id=1108447, width="mon")
 image(dat.ss)
+
+image(dat.ss,contour=FALSE)
+
+image(dat.ss,norm="active")
+
 }
 \keyword{hplot}

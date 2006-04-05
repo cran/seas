@@ -7,7 +7,7 @@
   days of continuous precipitation (wet days).
 }
 \synopsis{
-interarrival(dat, start, end, param = "precip", p.cut = 0.3,
+interarrival(dat, start, end, var = "precip", p.cut = 0.3,
              inv = FALSE, id)
 }
 \usage{
@@ -15,7 +15,7 @@ interarrival(dat, start, end, param = "precip", p.cut = 0.3,
 interarrival(dat)
 
 # with optional arguments
-interarrival(dat, start, end, param = "precip", p.cut = 0.3,
+interarrival(dat, start, end, var = "precip", p.cut = 0.3,
              inv = FALSE, id)
 }
 \arguments{
@@ -24,7 +24,7 @@ interarrival(dat, start, end, param = "precip", p.cut = 0.3,
   \item{start}{start year; if omitted minimum year will be used}
   \item{end}{end year; if omitted will use same as \code{start}, and if
     \code{start} is omitted, will use maximum year}
-  \item{param}{parameter on to which the interarrivals are calculated;
+  \item{var}{variable on to which the interarrivals are calculated;
     default is \code{precip}}
   \item{p.cut}{days with precipitation values greater than \code{p.cut}
     are considered to be \emph{wet} days, and the complement are

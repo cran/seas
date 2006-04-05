@@ -39,7 +39,7 @@
   the bin. Ideally, the bars will be tall and narrow with intense storms
   that occur infrequently, such as convective storms. Conversely the
   bars will be broader with less-intense rainfall events occurring more
-  often.
+  frequently.
 }
 \author{M.W. Toews}
 \seealso{\code{\link{seas.norm}}, \code{\link{precip.norm}},

@@ -24,7 +24,7 @@
         name <- getstnname(id)
       if(!is.null(name) && !is.null(id) && show.id)
         main <- paste(name,id)
-      else if(!is.null(name) && !show.id)
+      else if(!is.null(name) && (!show.id || is.null(id)))
         main <- name
       else if(!is.null(id) && show.id)
         main <- id
@@ -62,7 +62,7 @@
                       paste(range[1],range[2],sep=to))
       title$title <- paste(main,range,sep=from)
     }
-    if(style==3){
+    if(style==0){
       title$title <- NULL
       title$height <- .1
     }
@@ -77,7 +77,7 @@
     if(!is.null(precip.only) &&precip.only) {
       if(style == 1 || style == 2)
         col$precip <- "grey"
-      else if(style == 3) {
+      else if(style == 0) {
         col$precip <- 1
         col$precip.d <- 20
         col$precip.a <- 45
@@ -86,7 +86,7 @@
       if(style == 1) # colour theme ... see colours() for a list of all
         col$precip <- c("grey","lightblue")
       else if(style == 2) # grey-scale theme
-        col$precip <- c("grey60","grey80")
+        col$precip <- c("grey40","grey80")
       else if(style == 3){ # b/w line theme
         col$precip <- c(1,1) # black lines
         col$precip.d <- c(20,10) # line density
@@ -117,7 +117,7 @@
       col$dry <- "grey50"
       col$med <- "grey30"
       col$mean <- "grey50"
-    }else if(style == 3){
+    }else if(style == 0){
       col$temp <- 0
       col$dtemp <- 1
       col$na <- 1

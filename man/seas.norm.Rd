@@ -9,7 +9,7 @@
   rain, snow and total precipitation.
 }
 \synopsis{
-seas.norm(dat, start, end, param, norm = "days", 
+seas.norm(dat, start, end, var, norm = "days", 
           fun = "median", ann.only = FALSE, precip.norm = FALSE)
 precip.norm(dat, start, end, fun="median", \ldots)
 }
@@ -20,7 +20,7 @@ seas.norm(dat)
 precip.norm(dat)
 
 # all options
-seas.norm(dat, start, end, param, norm = "days",
+seas.norm(dat, start, end, var, norm = "days",
           fun = "median", ann.only = FALSE, precip.norm = FALSE)
 
 precip.norm(dat, start, end, fun="median",\ldots)
@@ -30,11 +30,11 @@ precip.norm(dat, start, end, fun="median",\ldots)
   \item{start}{start year; if omitted minimum year will be used}
   \item{end}{end year; if omitted will use same as \code{start}, and if
     \code{start} is omitted, will use maximum year}
-  \item{param}{parameter name for the \sQuote{normal}; if omitted will
-    use \code{dat$prime} (the prime parameter of the
+  \item{var}{variable name for the \sQuote{normal}; if omitted will
+    use \code{dat$prime} (the prime variable of the
     \code{\link{seas.sum}} object), or if \code{precip.norm=TRUE} will
     be \code{"precip"}}
-  \item{norm}{parameter for normalization of the sum, usually the number
+  \item{norm}{variable for normalization of the sum, usually the number
     of "days" in each bin, but it can also be "active" to estimate the
     precipitation normal for days of active precipitation}
   \item{fun}{\code{\link{character}} of an existing \code{function}
@@ -46,8 +46,8 @@ precip.norm(dat, start, end, fun="median",\ldots)
   \item{precip.norm}{\code{\link{logical}}; computes precipitation
     normal statistics, which is done slightly differently since it
     involves rain, snow and total precipitation; if TRUE,
-    \code{dat$param} must include "rain", "snow" and "precip" summed
-    parameters}
+    \code{dat$var} must include "rain", "snow" and "precip" summed
+    variables}
   \item{\ldots}{parameters to pass to \code{seas.norm} from
     \code{precip.norm}}
 }
@@ -157,7 +157,7 @@ precip.norm(dat, start, end, fun="median",\ldots)
   Units for annual normals, however, remain \emph{per year}, since a
   year is a suitable time derivative.
 }
-\seealso{\code{\link{plot.seas.norm}}, \code{\link{plot.seas.param}},
+\seealso{\code{\link{plot.seas.norm}}, \code{\link{plot.seas.var}},
   \code{\link{precip.dep}}}
 \examples{
 data(mscdata)

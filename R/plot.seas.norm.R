@@ -11,7 +11,7 @@
     width <- dat$width
     seas <- dat$seas
     ann <- dat$ann
-    param <- dat$param
+    var <- dat$var
     main <- .seastitle(id=dat$id,orig=orig,fun=fun,range=dat$range,...)
     xlab <- .seasxlab(width)
     col <- .seascols(...)
@@ -50,9 +50,9 @@
       ylab <- sprintf("(%s)%s",ylab,squareSym)
       alt.ylab <- sprintf("(%s)%s",alt.ylab,squareSym)
     }
-    if(!precip.norm) ylab <- paste(param,ylab)
+    if(!precip.norm) ylab <- paste(var,ylab)
     if (missing(maxy))
-      ylim <- range(pretty(range(0,seas$precip,seas$rain+seas$snow,na.rm=TRUE)))
+      ylim <- range(pretty(range(0,seas[,var],na.rm=TRUE)))
     else ylim <- c(0,maxy)
     par(yaxs="i",xaxs="r")
     if(add.alt){
@@ -80,7 +80,7 @@
       rect(lx,seas$snow,rx,seas$snow+seas$rain,,border=border,
            col=col$precip[2],density=col$precip.d[2],angle=col$precip.a[2])
     } else {# precipitation only
-      rect(lx,bot,rx,seas$precip,border=border,col=col$precip[1])
+      rect(lx,bot,rx,seas[,var],border=border,col=col$precip[1])
     }
     if(missing(leg))
       leg <- ifelse(is.null(fun) || fun %in% c("mean","median"),TRUE,FALSE)
@@ -98,7 +98,7 @@
       }
       annrate <- paste(unit,gettext("year"),sep="/")
       if(!precip.norm)
-        leg.text <- paste(gettext("Total"),param,round(ann[1,param],1),annrate)
+        leg.text <- paste(gettext("Total"),var,round(ann[1,var],1),annrate)
       else
         leg.text <- c(gettextf("Rain %.1f",ann$rain),
                       gettextf("Snow %.1f",ann$snow),
@@ -107,7 +107,7 @@
       if(dat$a.cut) # attach number of active days before rest of legend
         leg.text <- c(gettextf("%s days with %s",round(ann$active,1),
                                ifelse(precip.norm,gettext("precipitation"),
-                                      param)),leg.text)
+                                      var)),leg.text)
       text(leg.x,leg.y,paste(leg.text,collapse="\n"),adj=c(0,1))
     }
     if(show.na) {

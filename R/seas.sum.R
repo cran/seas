@@ -1,5 +1,5 @@
 "seas.sum" <-
-  function(x, start, end, width = 11, param, prime,
+  function(x, start, end, width = 11, var, prime,
            a.cut = 0.3, na.cut = 0.2, unit = "mm", id, name) {
     cl <- match.call()
     orig <- as.character(substitute(x))[[1]]
@@ -21,17 +21,17 @@
       warning("no data")
       invisible(NA)
     }
-    if(missing(param)) # try and find something useful
-      param <- c("precip","rain","snow","leak","evap","ezwat","et","runoff","air","soil")
-    param <- names(dat)[names(dat) %in% param]
-    if(length(param) == 0)
-      stop(paste(gettextf("no sum parameters were found in %s",orig),
-                 gettextf("specify using %s parameter",sQuote("param")),collapse="\n"))
-    if(missing(prime)) # use 'precip', or the first parameter as 'prime'
-      prime <- ifelse(any("precip" %in% param),"precip",param[1])
-    else if(!any(prime %in% param))
-      warning(paste(gettextf("%s not found in %s",sQuote(prime),sQuote(param)),
-                    gettextf("using %s",prime <- param[1]),collapse="\n"))
+    if(missing(var)) # try and find something useful
+      var <- c("precip","rain","snow","leak","evap","ezwat","et","runoff","air","soil")
+    var <- names(dat)[names(dat) %in% var]
+    if(length(var) == 0)
+      stop(paste(gettextf("no sum variables were found in %s",orig),
+                 gettextf("specify using %s parameter",sQuote("var")),collapse="\n"))
+    if(missing(prime)) # use 'precip', or the first variable as 'prime'
+      prime <- ifelse(any("precip" %in% var),"precip",var[1])
+    else if(!any(prime %in% var))
+      warning(paste(gettextf("%s not found in %s",sQuote(prime),sQuote(var)),
+                    gettextf("using %s",prime <- var[1]),collapse="\n"))
     if(is.na(a.cut) || a.cut <= 0)
       a.cut = FALSE
     start <- trange[1]
@@ -42,8 +42,8 @@
     years <- as.integer(start:end)
     yearf <- factor(dat$year,levels=years)
     ann <- data.frame(year=years,active=NA,days=NA,na=NA)
-    seas <- array(dim=c(length(years),num,length(param)),
-                  dimnames=list(years,levels(dat$fact),param))
+    seas <- array(dim=c(length(years),num,length(var)),
+                  dimnames=list(years,levels(dat$fact),var))
     days <- array(dim=c(length(years),num),
                   dimnames=list(years,levels(dat$fact)))
     na <- days
@@ -68,7 +68,7 @@
     else
       ann$active <- NULL
     ann$na <- tapply(dat[,prime],yearf,sum.is.num)
-    for(p in param)
+    for(p in var)
       ann[,p] <- tapply(dat[,p],yearf,sum,na.rm=TRUE)
     td <- function(y) table(mkfact(width=width,year=y))
     days[,] <- t(sapply(years,td))
@@ -76,7 +76,7 @@
       s <- mksub(dat,as.integer(y))
       if(nrow(s) > 0) {
         na[y,] <- tapply(s[,prime],s$fact,sum.is.num)
-        for(p in param) {
+        for(p in var) {
           seas[y,,p] <- tapply(s[,p],s$fact,sum,na.rm=TRUE)
           if(a.cut)
             active[y,,p] <- tapply(s[,p],s$fact,is.active)
@@ -89,11 +89,11 @@
     na <- days - na
     ann.na <- ann$na/ann$days > na.cut[1]
     seas.na <- na/days > na.cut[2]
-    ann[ann.na,param] <- NA
-    seas[,,param][seas.na] <- NA
+    ann[ann.na,var] <- NA
+    seas[,,var][seas.na] <- NA
     if(a.cut) {
       ann[ann.na,"active"] <- NA
-      active[,,param][seas.na] <- NA
+      active[,,var][seas.na] <- NA
     }
     l <- list(ann=ann,seas=seas,active=NA,days=days,na=na)
     if(a.cut)
@@ -102,7 +102,7 @@
       l$active <- NULL
     l$call <- cl
     l$years <- years
-    l$param <- param
+    l$var <- var
     l$prime <- prime
     l$unit <- unit
     l$width <- width

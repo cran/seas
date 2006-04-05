@@ -45,7 +45,7 @@ plot.seas.temp(x, start, end, width=11, id,
   Returns values from \code{\link{boxplot}} statistics on mean temperature.
 }
 \author{M.W. Toews}
-\seealso{\code{\link{plot.seas.param}}, \code{\link{plot.seas.norm}},
+\seealso{\code{\link{plot.seas.var}}, \code{\link{plot.seas.norm}},
   \code{\link{plot.year}}}
 \examples{
 data(mscdata)

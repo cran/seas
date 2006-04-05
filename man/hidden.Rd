@@ -66,28 +66,30 @@
 
   Title styles:
   \itemize{
+    \item \code{0} \emph{no title}, \code{par(mar)} is adjusted to
+    acomodate more space for the figure
     \item \code{1} \sQuote{[\emph{name}] [\emph{id}] [from
       \emph{start} to [\emph{end}]]}
     \item \code{2} \sQuote{[\emph{name}] [\emph{id}] [\code{\n}
       \emph{start} - [\emph{end}]]} (spans two lines)
-    \item \code{3} \emph{no title}, \code{par(mar)} is also adjusted to
-    acomodate more space for the figure
   }
   Colour styles:
   \itemize{
+    \item \code{0} black & white theme: all box-plots are clear, lines
+    are all black, precipitation or snow have a line density fill of 20
+    and angle of 45, rain has a line density of 10 and an angle of -45
+    
     \item \code{1}, colour theme: precipitation or rain are
     \sQuote{lightblue}, snow is \sQuote{grey}, temperature boxplots are
     \sQuote{lightgrey}, diurnal temperature lines are \sQuote{red}, wet
     boxplots are \sQuote{lightblue}, dry boxplots are \sQuote{orange},
     and \code{NA} marks are \sQuote{red}
+    
     \item \code{2}, grey-scale theme: precipitation or rain are
     \sQuote{grey80}, snow is \sQuote{grey60}, temperature boxplots are
     \sQuote{grey70}, diurnal temperature lines are \sQuote{grey20}, wet
     boxplots are \sQuote{grey70}, dry boxplots are \sQuote{grey50},
     and \code{NA} marks are \sQuote{grey30}
-    \item \code{3} black & white theme: all box-plots are clear, lines
-    are all black, precipitation or snow have a line density fill of 20
-    and angle of 45, rain has a line density of 10 and an angle of -45
   }
 
   Also, other details, such as the back-ground colour, font family, may
@@ -104,15 +106,40 @@
 \author{M.W. Toews}
 \seealso{\code{\link{getstnname}}}
 \examples{
+par.orig <- par(no.readonly=TRUE)
+on.exit(par(par.orig))
+
 .seasxlab(11)
 .seasxlab("mon")
 
 data(mscdata)
+
+\dontrun{
+par(family="serif",cex=1.2)
+}
 plot.seas.temp(mscdata, width=11, id=1108447,
   style=c(1,1), month.len=1)
+
+\dontrun{
+par(family="sans",cex=0.8)
+}
 plot.seas.temp(mscdata, width=365/12, id=1108447,
-  style=c(2,2), month.abb=FALSE)
+  style=c(2,0), month.abb=FALSE)
+
+\dontrun{
+par(family="mono",cex=1)
+}
 plot.seas.temp(mscdata, width="mon",  id=1108447,
-  style=c(1,3))
+  style=c(0,2))
+
+# make a professional EPS figure for a publication:
+\dontrun{
+postscript("fig2_temperature.eps",
+  width=5,height=3,horizontal=FALSE,onefile=TRUE,
+  paper="special")
+par(cex=0.6,lwd=0.8)
+plot.seas.temp(mscdata,id="1108447",style=c(3,2))
+dev.off()
+}
 }
 \keyword{utilities}
