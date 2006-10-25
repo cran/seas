@@ -1,5 +1,26 @@
 Please submit any suggestions or errors to me <mwtoews@sfu.ca>
 
+Version 0.3-1
+2006-10-25
+ - lots of changes in this release: some functions added, or renamed
+ - moved 'mkfact' to 'mkseas', and it is more flexible, and can start
+   on different dates, such as 'Aug 1'
+ - added 'mkann' to complement 'mkseas', which finds the annual breaks
+   between seasons; this is simple if 'start.day' is January 1st, but
+   seasons don't need to star here anymore
+ - more use of 'attr' to pass metadata between objects; such as 'units'
+   and 'long.name' for variables in data frames
+ - 'mscdata' and 'read.msc' now uses attributes for storing long names
+   and units for each variable
+ - data must be subdivided by 'mksub', as the plotting functions have
+   changed or removed 'start', 'end', and 'id'
+ - 'mksub's 'start' and 'end' parameters now either accept an integer
+   year or a 'Date' class
+ - plotting functions now use 'start' to designate a starting bin, and
+   'rep' to repeat some bins 
+ - the grid from '.seasmonthgrid' is more exact to the actual month
+   boundaries
+
 Version 0.2-1
 2006-04-05
  - removed 'degday' and 'growday' since they were not needed

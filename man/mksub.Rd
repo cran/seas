@@ -1,49 +1,60 @@
 \name{mksub}
 \alias{mksub}
-\title{Make a subset of climate data}
+\title{Make a subset of seasonal data}
 \description{
-  Creates a subset of a \code{data.frame} of climate data.
+  Creates a subset of a \code{data.frame} with temporal observations,
+  using IDs and start and ending dates or years.
 }
 \usage{
-  mksub(dat, start, end, id, rm.id = TRUE)
+  mksub(x, start, end, id)
 }
 \arguments{
-  \item{dat}{climate data frame}
-  \item{start}{start year; if omitted minimum year will be used}
-  \item{end}{end year; if omitted will use same as \code{start}, and if
-    \code{start} is omitted, will use maximum year}
-  \item{id}{unique station identifier used to extract a subset of data
-    from \code{dat}}
-  \item{rm.id}{\code{\link{logical}}; removes \code{id} field from
-    \code{dat}, default is \code{TRUE}}
+  \item{x}{a data frame with temporal observations}
+  \item{start}{either a starting \code{\link{Date}} or
+    \code{\link{integer}} year; if omitted minimum will be used}
+  \item{end}{either an ending \code{Date} or year; if omitted will use
+    same year as \code{start}, and if \code{start} is omitted, will use
+    maximum year}
+  \item{id}{unique station identifier (if present), which is assumed to
+    be a column of \code{x} as \code{x$id}; it is used to extract a
+    subset of data from a sinlge ID}
 }
 \details{
   This utility function is useful for creating temporal subsets of
-  climate data and for extracting a single station out of a
-  \code{data.frame} with multiple climate stations. The \code{dat}
-  object can have other fields (other than the standard set of fields),
-  which will be returned.
+  seasonal data and for extracting a single station out of a
+  \code{data.frame} with multiple stations or sets. The \code{x}
+  object can have many columns, representing measured variables for each
+  day, which will be returned with their original \link{attributes}.
   
   If \code{id} is used, that station will be extracted from
-  \code{dat}. The returned object will no longer have an \code{id}
-  field, unless \code{rm.id = FALSE}. If \code{id} is not provided, but
-  there are more than one unique IDs in \code{dat}, the first unique ID
-  will be extracted, with a warning.
+  \code{x}. If \code{id} is not provided, but there are more than one
+  unique IDs in \code{x$id}, the first unique ID will be extracted, with
+  a \link{warning}.
 }
 \value{
-  Returns a subset of a \code{\link{data.frame}} with the same fields as
-  \code{dat}, except for \code{id} (if it is present and \code{rm.id =
-    TRUE}).
+  Returns a subset of a \code{\link{data.frame}} with the same columns
+  and attributes as \code{x}, except \code{id}, which will be retained
+  as an attribute (e.g., \code{attr(x,"id")}).
 }
 \author{M.W. Toews}
-\seealso{\code{\link{read.msc}}}
+\seealso{\code{\link{read.msc}}, \code{\link{mscdata}}}
 \examples{
 data(mscstn)
 data(mscdata)
 
-dim(mksub(mscdata, id=1108447))
-dim(mksub(mscdata, id=1108447, start=1980))
-dim(mksub(mscdata, id=1108447, start=1980, end=1989))
+# All available data from one station
+summary(mksub(mscdata, id=1108447))
+
+# One year
+str(mksub(mscdata, id=1108447, start=1980))
+
+# A range of years
+str(mksub(mscdata, id=1108447, start=1980, end=1989))
+
+# A range of dates
+summary(mksub(mscdata, id=1108447,
+              start=as.Date("1975-08-01"),
+                end=as.Date("2000-07-31")))
 }
 \keyword{datagen}
 \keyword{utilities}

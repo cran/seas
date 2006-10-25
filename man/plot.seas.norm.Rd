@@ -8,13 +8,17 @@
   available). Significant missing data values are also indicated.
 }
 \usage{
-\method{plot}{seas.norm}(x, maxy, varwidth=FALSE, normwidth=FALSE,
-     show.na=TRUE, leg, add.alt=FALSE, \ldots)
+\method{plot}{seas.norm}(x, start=1, rep=0, ylim,
+     varwidth=FALSE, normwidth=FALSE,
+     leg, add.alt=FALSE, main, \ldots)
 }
 \arguments{
   \item{x}{a \code{seas.norm} object created by either
     \code{\link{seas.norm}} or \code{\link{precip.norm}}}
-  \item{maxy}{maximum y-axis for plot}
+  \item{start}{starting bin}
+  \item{rep}{repeat bins}
+  \item{ylim}{range of  y-axis; either as a single value,
+    \code{c(0,max)}, or as two values \code{c(min,max)}}
   \item{varwidth}{\code{logical}; varies the width of each bar directly
     proportional to the frequency of active days (defined by a
     threshold); the value is normalized according to the next argument}
@@ -22,15 +26,14 @@
     \code{numeric} value (in days), or the maximum value if given
     \code{TRUE}; the default \code{FALSE} value normalizes each bar to
     the number of potentially active days}
-  \item{show.na}{\code{logical}; indicates if \code{NA}s should be
-    displayed (as red lines on bottom) or not}
   \item{leg}{if \code{TRUE} shows a legend summary of the statistics in
-    the upper left hand corner; if \code{"\link{locator}"} you can
+    the upper left hand corner; if \dQuote{\code{\link{locator}}} you can
     manually place the legend by clicking on the active graphics device}
-  \item{add.alt}{\code{logical}; adds imperial units on the right-hand y-axis}
-  \item{\ldots}{other arguments passed to \code{\link{.seastitle}} and
-    \code{\link{.seascols}} for title style, colours, and other
-    customizations to the appearance}
+  \item{add.alt}{\code{logical}; adds imperial units on the right-hand
+    y-axis}
+  \item{main}{title for plot, otherwise this will automatically be
+    generated}
+  \item{\ldots}{ignored}
 }
 \details{
   The \code{varwidth} variable is useful for separating different
@@ -46,9 +49,19 @@
   \code{\link{seas.sum}}}
 \examples{
 data(mscdata)
+dat <- mksub(mscdata, id=1108447)
+d.ss <- seas.sum(dat)
+plot(seas.norm(d.ss))
+plot(precip.norm(d.ss,fun=median))
+plot(precip.norm(d.ss,fun=mean))
+plot(precip.norm(d.ss,fun=mean,norm="active"))
+plot(precip.norm(d.ss,fun=median,norm="active"))
+plot(precip.norm(d.ss),start=15,rep=12)
+mar <- par("mar")
+plot(precip.norm(d.ss),add.alt=TRUE)
 
-d.ss <- seas.sum(mscdata, id=1108447)
-d.nm <- precip.norm(d.ss, fun="mean")
-plot(d.nm)
+par(mar=mar)
+d2.ss <- seas.sum(dat,start.day=as.Date("2000-08-01"))
+plot(precip.norm(d2.ss, fun="mean"))
 }
 \keyword{hplot}

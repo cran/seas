@@ -1,29 +1,35 @@
 \name{mscdata}
 \alias{mscdata}
 \docType{data}
-\title{Meteorological Survey of Canada sample climate data}
+\encoding{latin1}
+\title{Meteorological Service of Canada sample climate data}
 \description{
-  Sample climate data from Meteorological Survey of Canada
+  Sample climate data from the Meteorological Service of Canada
   (\acronym{MSC}) climate stations in western Canada.
 }
 \usage{data(mscdata)}
 \format{
   A \code{\link{data.frame}} with 26358 daily observations on the
-  following 10 variables (metric units of degrees C and mm/day):
+  following 10 variables (metric units of \sQuote{\enc{°}{degrees }C}
+  and \sQuote{mm} \emph{per day}):
   \describe{
-    \item{\code{id}}{\code{\link{factor}} used to distinguish multiple
+    \item{\code{id}:}{\code{\link{factor}} used to distinguish multiple
       stations within a single data frame}
-    \item{\code{year}}{\code{\link{integer}} year}
-    \item{\code{jday}}{\code{\link{integer}} Julian day; 1-365 or 1-366}
-    \item{\code{date}}{\code{\link{Date}} class; useful for plotting a
-      continuous time-series}
-    \item{\code{max_t}}{Maximum daily temperature}
-    \item{\code{min_t}}{Minimum daily temperature}
-    \item{\code{mean_t}}{Mean daily temperature}
-    \item{\code{precip}}{Total daily precipitation}
-    \item{\code{rain}}{Total daily liquid-phase precipitation}
-    \item{\code{snow}}{Total daily solid-phase precipitation}
+    \item{\code{year}:}{\code{\link{integer}} year}
+    \item{\code{yday}:}{\code{\link{integer}} day of year; 1--365 or
+      1--366}
+    \item{\code{date}:}{\code{\link{Date}} class}
+    \item{\code{t_max}:}{daily maximum temperature}
+    \item{\code{t_min}:}{daily minimum temperature}
+    \item{\code{t_mean}:}{daily mean temperature}
+    \item{\code{precip}:}{total daily precipitation}
+    \item{\code{rain}:}{total daily liquid-phase precipitation}
+    \item{\code{snow}:}{total daily solid-phase precipitation}
   }
+  The climate variables have attributes (\code{\link{attr}} of
+  \code{units} and \code{long.name} to identify their units and long
+  names for plotting labels.
+  
   There are three climate stations in this data frame from:
   \tabular{lll}{
     \bold{ID} \tab \bold{Station Location} \tab \bold{Province}\cr
@@ -32,37 +38,73 @@
     2100630   \tab Haines Junction         \tab \acronym{YT}
   }
   
-  All data spans from 1975 to 2004 for each station.
+  All data spans from 1975 to 2004 for each station. Missing values are
+  present.
 }
 \details{
   The field \code{id} is optional, but very handy when handling multiple
-  stations. The \code{date} column was made using
-  \code{dat$date <- as.Date(paste(dat$year,dat$jday),"\%Y \%j")}.
+  stations. Also, the day of year (\code{yday}) and \code{year} are
+  optional, since these are stored in the \code{date}, using \cr
+  \code{dat$date <- as.Date(paste(dat$year,dat$yday),"\%Y \%j")}.
+
+  The \code{units} and \code{long.name} attributes stored in the climate
+  variables are optional, but help annotate the graphics.
 }
 \source{
-  Data provided by the Meteorological Survey of Canada
+  Data provided by the Meteorological Service of Canada
   (\url{http://www.msc.ec.gc.ca/}), with permission. This data may only
   be reproduced for personal use; any other reproduction is permitted
   only with the written consent of Environment Canada
   (\url{http://climate.weatheroffice.ec.gc.ca/contacts/}).
 }
 \seealso{\code{\link{mscstn}}, \code{\link{mksub}},
-  \code{\link{mkfact}}, \code{\link{read.msc}}}
+  \code{\link{mkseas}}, \code{\link{read.msc}}}
 \author{M.W. Toews}
 \examples{
 data(mscstn)
 data(mscdata)
 
+# structure in R
+str(mscdata)
+
+# first few rows
 head(mscdata)
+
+# here are all the station IDs
 stnids <- levels(mscdata$id)
+
+# show all data
+rng.p <- range(mscdata$precip,na.rm=TRUE)
+rng.t <- range(mscdata$t_mean,na.rm=TRUE)
+par(mfcol=c(2,3),mgp=c(2,1,0),mar=c(3,3,3,1),bty="l")
+for(n in levels(mscdata$id)) {
+  dat <- mscdata[mscdata$id==n,]
+  plot(t_mean ~ date,dat,"l",col="red",ylim=rng.t)
+  abline(h=0)
+  plot(precip ~ date,dat,"l",col="blue",ylim=rng.p,
+    main=n)
+}
 
 # show stations and station names available in this data frame
 data.frame(stnids, name=getstnname(stnids))
 dat <- mksub(mscdata, id=1108447)
-dat$fact <- mkfact(dat, "mon")
-plot(mean_t ~ date, data=dat, type="l")
-plot(mean_t ~ date, data=dat, subset=fact=="Dec", type="l")
+dat$month <- mkseas(dat, "mon")
+plot(t_mean ~ date, data=dat)
+plot(t_mean ~ date, data=dat, subset=month=="Dec")
 plot.seas.temp(dat)
 plot.year(dat)
+
+# plot high-resolution statistics
+dly.tmp <- tapply(dat$t_mean,dat$yday,
+  quantile,c(5,25,50,75,95)/100,na.rm=TRUE)
+dly <- data.frame(yday=1:366,
+  t(matrix(unlist(dly.tmp),nrow=5)))
+names(dly) <- c("yday","d5","d25","median","d75","d95")
+plot(median ~ yday,dly,"n",ylim=c(-5,25),
+  ylab="mean temperature",xlab="day of year")
+polygon(c(1:366,366:1),c(dly$d5,rev(dly$d95)),border=FALSE,col="grey80")
+polygon(c(1:366,366:1),c(dly$d25,rev(dly$d75)),border=FALSE,col="grey50")
+lines(median ~ yday,dly)
+abline(h=0)
 }
 \keyword{datasets}

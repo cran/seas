@@ -7,25 +7,21 @@
   days of continuous precipitation (wet days).
 }
 \synopsis{
-interarrival(dat, start, end, var = "precip", p.cut = 0.3,
-             inv = FALSE, id)
+interarrival(x, var = "precip", p.cut = 0.3, inv = FALSE)
 }
 \usage{
 # minimum
-interarrival(dat)
+interarrival(x)
 
 # with optional arguments
-interarrival(dat, start, end, var = "precip", p.cut = 0.3,
-             inv = FALSE, id)
+interarrival(x, var = "precip", p.cut = 0.3, inv = FALSE)
 }
 \arguments{
-  \item{dat}{\code{data.frame}, must have at least \code{date} and a
-    field to calculate an interarrival with (such as precip)}
-  \item{start}{start year; if omitted minimum year will be used}
-  \item{end}{end year; if omitted will use same as \code{start}, and if
-    \code{start} is omitted, will use maximum year}
-  \item{var}{variable on to which the interarrivals are calculated;
-    default is \code{precip}}
+  \item{x}{a \code{data.frame} with \code{\link{Date}} and \code{var}
+    columns of data; \code{x} can also have \code{id} or \code{name}
+    \link{attributes}}
+  \item{var}{a variable on to which the interarrivals are calculated;
+    default is \code{"precip"}}
   \item{p.cut}{days with precipitation values greater than \code{p.cut}
     are considered to be \emph{wet} days, and the complement are
     \emph{dry} days; a trace amount of 0.3 mm is suggested}
@@ -33,8 +29,6 @@ interarrival(dat, start, end, var = "precip", p.cut = 0.3,
     that the date is the first \emph{wet} day if \code{inv=FALSE}
     (default), or the date is the first \emph{dry} day if
     \code{inv=TRUE}}
-  \item{id}{unique station identifier used to extract a subset of data
-    from \code{dat}}
 }
 \details{
   The interarrival is the same as the \emph{spell} period (i.e., dry
@@ -49,8 +43,10 @@ interarrival(dat, start, end, var = "precip", p.cut = 0.3,
 }
 \value{
   \code{interarrival} object (which inherits the \code{data.frame}
-  class) with \code{date}, \code{wet}, \code{dry} and \code{fact} fields
-  (if supplied with a \code{width} value).
+  class) with \code{date}, \code{wet}, \code{dry} columns.
+
+  The table has \code{id} and \code{name} \link{attributes} (if
+  available from \code{x}).
 }
 \author{M.W. Toews}
 \references{
@@ -61,8 +57,12 @@ interarrival(dat, start, end, var = "precip", p.cut = 0.3,
 \examples{
 data(mscdata)
 
-van.int <- interarrival(mscdata, id=1108447)
-plot(van.int, log=FALSE, maxy=30)
+van.int <- interarrival(mksub(mscdata,id=1108447))
+summary(van.int)
+van.int[which.max(van.int$dry),]
+van.int[which.max(van.int$wet),]
+
+plot(van.int, ylog=FALSE, maxy=30)
 }
 \keyword{datagen}
 \keyword{ts}

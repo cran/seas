@@ -6,53 +6,53 @@
   station with a given precipitation normal.
 }
 \usage{
-precip.dep(dat, norm, id)
+precip.dep(x, norm, var="precip")
 }
 \arguments{
-  \item{dat}{\code{data.frame} of climate data}
-  \item{norm}{\code{precip.norm} object containing the precipitation
-    normal for the same station as \code{dat}}
-  \item{id}{unique station identifier used to extract a subset of data
-    from \code{dat}; if missing will use \code{norm$id} (if it exists)}
+  \item{x}{a seasonal \code{data.frame} of climate data}
+  \item{norm}{a \code{precip.norm} object containing the precipitation
+    normal for the same station as \code{x}}
+  \item{var}{a common seasonal variable found in \code{x} and \code{norm}}
 }
 \details{
-  This function is useful for looking at the behavior of a precipitation
+  This function is useful for looking at the behaviour of a precipitation
   time-series in relation to its precipitation normal over an extended
   period of time. This is especially useful for identifying changes in
   precipitation, and is useful for relating to groundwater recharge
   patterns
-  (i.e. \url{http://wlapwww.gov.bc.ca/rfc/river_forecast/grwater/obsw002.html}).
+  (i.e., \url{http://wlapwww.gov.bc.ca/rfc/river_forecast/grwater/obsw002.html}).
 }
 \value{
-  Returns a \code{data.frame} with \code{year}, \code{jday},
-  \code{date}, \code{precip}, and \code{dep} fields.
+  Returns a \code{data.frame} similar to \code{x}, but contains the
+  departures in the \code{dep} column.
 }
 \references{
   Hodge, W.S., 2001, \emph{A Preliminary Survey of Methyl Tertiary-Butyl
     Ether (\acronym{MTBE}) in Groundwater at Selected Well Sites in
     British Columbia, Canada}, Groundwater Section, Water Protection
-  Branch, Ministry of Water, Land and Air Protection.
+    Branch, Ministry of Water, Land and Air Protection.
 }
 \author{M.W. Toews}
 \note{
-  The selection of \code{fun} in \code{\link{precip.norm}} will affect
-  the result of this function; \code{width} has a small effect.
+  The selection of \code{fun} in \code{\link{precip.norm}}, such as
+  using \code{\link{mean}} or \code{\link{median}}, will affect
+  the result of this function; \code{width} has only a minor effect.
   
-  Periods with missing (\code{NA}) values in \code{dat$precip} will have
-  a flat departure, neither increasing nor decreasing.
+  Periods with missing (\code{NA}) values in \code{var} of \code{x} will
+  have a flat departure, neither increasing nor decreasing.
 }
 \seealso{\code{\link{precip.norm}}}
 \examples{
 data(mscstn)
 data(mscdata)
 
-d <- mksub(mscdata, id=1108447, rm.id=FALSE)
-d.ss <- seas.sum(d)
-d.dep <- precip.dep(d,precip.norm(d.ss,fun="mean"))
-plot(dep ~ date, d.dep, type="l", main="CPD from mean normals")
+dat <- mksub(mscdata, id=1108447)
+dat.ss <- seas.sum(dat)
+dat.dep <- precip.dep(dat,precip.norm(dat.ss,fun="mean"))
+plot(dep ~ date, dat.dep, type="l", main="CPD from mean normals")
 
-d.dep <- precip.dep(d, precip.norm(d.ss,fun="median"))
-plot(dep ~ date, d.dep, type="l", main="CPD from median normals")
+dat.dep <- precip.dep(dat, precip.norm(dat.ss,fun="median"))
+plot(dep ~ date, dat.dep, type="l", main="CPD from median normals")
 }
 \keyword{manip}
 \keyword{datagen}

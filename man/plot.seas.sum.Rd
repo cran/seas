@@ -3,27 +3,28 @@
 \alias{plot.precip.sum}
 \title{Plot boxplots of normalized seasonal sums}
 \description{
-  Plots normalized sums using boxplots.
+  Plots normalized seasonal sums using boxplots.
 }
 \usage{
-\method{plot}{seas.sum}(x, var, norm="days", maxy, logy = FALSE,
-    col = "lightgrey", \ldots)
+\method{plot}{seas.sum}(x, var, norm="days", year.filter, ylim,
+    start=1, rep=0, col = "lightgrey", main, \ldots)
 }
 \arguments{
   \item{x}{a \code{seas.sum} object created by \code{\link{seas.sum}}}
   \item{var}{name of seasonal variable in \code{x}}
-  \item{norm}{variable to normalize by, either \code{"days"} (to
+  \item{norm}{a variable to normalize by, either \code{"days"} (to
     produce \emph{unit/day}) or \code{"active"} (\emph{unit/day}, when
     active); it may also be a \code{matrix} with the same dimensions as
     \code{x$days}}
-  \item{maxy}{maximum y-axis for plot}
-  \item{logy}{\code{logical}; makes the y-axis logarithmic, which may be
-    necessary of strongly skewed distributions (usually made using small
-    \code{width} arguments)}
+  \item{year.filter}{use only these years for analysis}
+  \item{ylim}{either a single value for \code{c(0,ylim)}, or a range of
+    \code{c(min,max)} for the y-axis limits}
+  \item{start}{starting bin at left-hand side of plot}
+  \item{rep}{repeat bins on right-hand side of plot}
   \item{col}{colour for boxplot, default is \code{"lightgrey"}}
-  \item{\ldots}{other arguments passed to \code{\link{.seastitle}} and
-    \code{\link{.seascols}} for title style, colours, and other
-    customizations to the appearance}
+  \item{main}{main title for plot, otherwise a title will be
+    automatically generated}
+  \item{\ldots}{ignored}
 }
 \details{
   This function is a boxplot interpretation of a \code{seas.sum}
@@ -41,18 +42,27 @@
   For instance, the median will appear to decrease as \code{width} decreases.
 }
 \author{M.W. Toews}
-\seealso{\code{\link{seas.sum}}, \code{\link{image.seas.sum}},
-  \code{\link{seas.sum}}, \code{\link{seas.norm}}}
+\seealso{\code{\link{seas.sum}}, \code{\link{image.seas.sum}}, \code{\link{seas.norm}}}
 \examples{
 data(mscdata)
+par.orig <- par(no.readonly=TRUE)
+on.exit(par.orig)
 
-van.ss <- seas.sum(mscdata, id=1108447)
+dat <- mksub(mscdata, id=1108447)
+dat.ss <- seas.sum(dat)
 
 # Normalized by the number of days in each bin
-plot(van.ss)
+plot(dat.ss)
 
 # Normalized by the number of active days in each bin
-plot(van.ss,norm="active")
+plot(dat.ss,norm="active")
+
+# Snow, using a different start day, and a better y-axis:
+dat2.ss <- seas.sum(dat,var="snow",width="mon",
+                    start.day=as.Date("2000-08-01"))
+par(yaxs="i")
+plot(dat2.ss,var="snow")
+plot(dat2.ss,var="snow",norm="active")
 
 }
 \keyword{hplot}

@@ -1,51 +1,25 @@
 "seas.sum" <-
-  function(x, start, end, width = 11, var, prime,
-           a.cut = 0.3, na.cut = 0.2, unit = "mm", id, name) {
-    cl <- match.call()
+  function(x, var, width = 11, start.day=1, prime,
+           a.cut = 0.3, na.cut = 0.2) {
     orig <- as.character(substitute(x))[[1]]
-    if(!inherits(x,"data.frame"))
-      stop(gettextf("%s is not a %s object",
-                    sQuote(orig),sQuote("data.frame")))
-    if(missing(id)) id <- x$id[1]
-    if(missing(start)) start <- NULL
-    if(missing(end)) end <- start
-    dat <- mksub(x,start,end,id=id)
-    n <- names(dat)
-    if(!"year" %in% n)
-      dat$year <- as.integer(format(dat$date,"%Y"))
-    if(!"jday" %in% n)
-      dat$jday <- as.integer(format(dat$date,"%j"))
-    if(nrow(dat) > 0)
-      trange <- as.integer(format(range(dat$date),"%Y"))
-    else {
-      warning("no data")
-      invisible(NA)
-    }
     if(missing(var)) # try and find something useful
       var <- c("precip","rain","snow","leak","evap","ezwat","et","runoff","air","soil")
-    var <- names(dat)[names(dat) %in% var]
-    if(length(var) == 0)
-      stop(paste(gettextf("no sum variables were found in %s",orig),
-                 gettextf("specify using %s parameter",sQuote("var")),collapse="\n"))
-    if(missing(prime)) # use 'precip', or the first variable as 'prime'
-      prime <- ifelse(any("precip" %in% var),"precip",var[1])
-    else if(!any(prime %in% var))
-      warning(paste(gettextf("%s not found in %s",sQuote(prime),sQuote(var)),
-                    gettextf("using %s",prime <- var[1]),collapse="\n"))
+    var <- names(x)[names(x) %in% var]
+    if(missing(prime)) # use the first variable as 'prime'
+      prime <- ifelse("precip" %in% var, "precip", var[1])
+    sc <- seas.df.check(x,orig,c(prime,var))
     if(is.na(a.cut) || a.cut <= 0)
       a.cut = FALSE
-    start <- trange[1]
-    end   <- trange[2]
-    dat$fact <- mkfact(dat,width)
-    bins <- levels(dat$fact)
+    x$fact <- mkseas(x,width,start.day)
+    x$ann <- mkann(x,start.day)
+    bins <- levels(x$fact)
     num <- length(bins)
-    years <- as.integer(start:end)
-    yearf <- factor(dat$year,levels=years)
+    years <- levels(x$ann)
     ann <- data.frame(year=years,active=NA,days=NA,na=NA)
     seas <- array(dim=c(length(years),num,length(var)),
-                  dimnames=list(years,levels(dat$fact),var))
+                  dimnames=list(years,bins,var))
     days <- array(dim=c(length(years),num),
-                  dimnames=list(years,levels(dat$fact)))
+                  dimnames=list(years,bins))
     na <- days
     if(is.na(a.cut) || !a.cut) {
       a.cut <- FALSE
@@ -60,20 +34,19 @@
       }
     }
     if (length(na.cut) == 1) na.cut <- rep(na.cut,2)
-    sum.is.num <- function(d) return(sum(!is.na(d),na.rm=TRUE)) # missing days
-    ndays<-function(y)(365+ifelse(y%%4==0&y%%100!=0,1,0)+ifelse(y%%400==0,1,0))
-    ann$days <- sapply(years,ndays)
+    sum.is.num <- function(x)sum(is.finite(x))
+    ann$days <- attr(x$ann,"year.lengths")
     if(a.cut)
-      ann$active <- tapply(dat[,prime],yearf,is.active)
+      ann$active <- tapply(x[,prime],x$ann,is.active)
     else
       ann$active <- NULL
-    ann$na <- tapply(dat[,prime],yearf,sum.is.num)
+    ann$na <- tapply(x[,prime],x$ann,sum.is.num)
     for(p in var)
-      ann[,p] <- tapply(dat[,p],yearf,sum,na.rm=TRUE)
-    td <- function(y) table(mkfact(width=width,year=y))
-    days[,] <- t(sapply(years,td))
-    for(y in as.character(years)) {
-      s <- mksub(dat,as.integer(y))
+      ann[,p] <- tapply(x[,p],x$ann,sum,na.rm=TRUE)
+    td <- function(y) table(mkseas(width=width,year.length=y))
+    days[,] <- t(sapply(ann$days,td))
+    for(y in 1:length(years)) { # using integer indexes
+      s <- x[x$ann==years[y],,drop=FALSE]
       if(nrow(s) > 0) {
         na[y,] <- tapply(s[,prime],s$fact,sum.is.num)
         for(p in var) {
@@ -100,20 +73,26 @@
       l$active <- active
     else
       l$active <- NULL
-    l$call <- cl
+    l$start.day <- start.day
     l$years <- years
     l$var <- var
+    l$units <- list()
+    l$long.name <- list()
+    for(v in var) {
+      l$units[[v]] <- attr(x[[v]],"units")
+      l$long.name[[v]] <- attr(x[[v]],"long.name")
+      if(is.null(l$long.name[[v]]))
+        l$long.name[[v]] <- v # use var name
+    }
     l$prime <- prime
-    l$unit <- unit
     l$width <- width
     l$bins <- bins
+    l$bin.lengths <- attr(x$fact,"bin.lengths")
+    l$year.range <- attr(x$ann,"year.range")
     l$na.cut <- na.cut
     l$a.cut <- a.cut
+    l$id <- sc$id
+    l$name <- sc$name
     attr(l,"class") <- "seas.sum"
-    if(!is.null(id)) {
-      l$id <- as.character(id)
-      l$name <- getstnname(id)
-    }
-    if(!missing(name)) l$name <- name
     return(l)
   }

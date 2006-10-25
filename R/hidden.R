@@ -1,149 +1,132 @@
 ".seasxlab" <- 
-  function(width){
-    if(is.numeric(width))
-      return(gettextf("%s-day group",round(width,1)))
-    if(any(grep("mon",width)))
-      return(gettext("Monthly"))
-    if(any(grep("zod",width)))
-      return(gettext("Zodiac"))
-    if(width == "DJF")
-      return(gettext("Quarterly (seasonal)"))
-    if(width == "JFM")
-      return(gettext("Quarterly (annual)"))
-    if(width == "JF")
-      return(gettext("Two months"))
-    return(as.character(width[1]))
+  function(width,start.day){
+    str <- if(is.numeric(width))
+      gettextf("%s-day group",round(width,1))
+    else if(any(grep("mon",width)))
+      gettext("Monthly")
+    else if(any(grep("zod",width)))
+      gettext("Zodiac")
+    else if(width == "DJF")
+      gettext("Quarterly (seasonal)")
+    else if(width == "JFM")
+      gettext("Quarterly (annual)")
+    else if(width == "JF")
+      gettext("Two months")
+    else as.character(width[1])
+    if(!is.null(start.day) && start.day != 1){
+      if(inherits(start.day,c("POSIXct","Date"))) {
+        mday <- as.integer(format(start.day,"%d"))
+        fmt <- if(mday == 1)
+          getOption("seas.label")$month
+        else
+          getOption("seas.label")$monthday
+        st <- format(start.day,fmt)
+      }else{
+        mday <- 2
+        st <- gettextf("day %i of the year",start.day)
+      }
+      str <- gettextf(ngettext(mday,
+                               "%s, starting in %s",
+                               "%s, starting on %s"),str,st)
+    }
+    return(str)
   }
-
+".seasylab" <-
+function(orig,long.name=NULL,units=NULL){
+  ylab <- if(is.null(long.name)) orig else long.name
+  if(!is.null(units))
+    ylab <- sprintf(getOption("seas.label")$fmt,ylab,units)
+  ylab
+}
 ".seastitle" <- 
-  function(main=NULL, id=NULL, name=NULL, orig=NULL, fun=NULL, range=NA,
-           show.range=TRUE, show.id=TRUE, style=c(1,NA),...){
-    style = style[1] # first position is for title
+  function(main=NULL, id=NULL, name=NULL, orig=NULL, fun=NULL, range=NA){
+    op <- getOption("seas.main")
     if(is.null(main)) {
-      if(is.null(name) && !is.null(id))
+      if(is.null(name) && !is.null(id) && op$show.id)
         name <- getstnname(id)
-      if(!is.null(name) && !is.null(id) && show.id)
+      if(!is.null(name) && !is.null(id) && op$show.id)
         main <- paste(name,id)
-      else if(!is.null(name) && (!show.id || is.null(id)))
+      else if(!is.null(name) && (!op$show.id || is.null(id)))
         main <- name
-      else if(!is.null(id) && show.id)
+      else if(!is.null(id) && op$show.id)
         main <- id
       else if(!is.null(orig))
         main <- orig[[1]]
       else
         main <- ""
     }
-    if(!is.null(fun))
+    if(!is.null(fun) && op$show.fun)
       main <- paste(main,fun,sep=ifelse(main == "",""," "))
-    title <- list(title=main)
-    title$height <- 1 # for image.seas.sum, in cm
-    if(show.range) {
-      if(style==1) {
-        from <- "\n"
-        to <- " - "
-        title$line <- 1.5
-        title$cex <- 1.5
-      } else if(style==2) {
-        from <- sprintf(" %s ",gettext("from"))
-        to <- sprintf(" %s ",gettext("to"))
-        title$line <- 1
-        title$cex <- 2
-      } else {
-        from <- ""
-        to <- ""
-      }
-      if(main =="") {
-        from <- ""
-        title$line <- 1
-        title$cex <- 2
-      }
+    if(length(range)==2 && all(is.finite(range))){
       range <- ifelse(range[1] == range[2],
-                      paste(range[1]),
-                      paste(range[1],range[2],sep=to))
-      title$title <- paste(main,range,sep=from)
+                      range[1],
+                      paste(range[1],range[2],sep=op$rngsep))
+      main <- sprintf(op$fmt,main,range)
     }
-    if(style==0){
-      title$title <- NULL
-      title$height <- .1
-    }
-    title
-  }
-
-".seascols" <-
-  function(precip.only=NULL,style=c(NA,1),lwd=NULL,...){
-    if(length(style) >= 2)
-      style <- style[2] # second position is for colours
-    col <- list()
-    if(!is.null(precip.only) &&precip.only) {
-      if(style == 1 || style == 2)
-        col$precip <- "grey"
-      else if(style == 0) {
-        col$precip <- 1
-        col$precip.d <- 20
-        col$precip.a <- 45
-      }
-    }else{ # in the format c(snow,rain)
-      if(style == 1) # colour theme ... see colours() for a list of all
-        col$precip <- c("grey","lightblue")
-      else if(style == 2) # grey-scale theme
-        col$precip <- c("grey40","grey80")
-      else if(style == 3){ # b/w line theme
-        col$precip <- c(1,1) # black lines
-        col$precip.d <- c(20,10) # line density
-        col$precip.a <- c(45,-45) # line angle
-      }
-    }
-    if(is.null(lwd)) {
-      col$med.lwd <- col$mean.lwd <- 1
-      col$dtemp.lwd <- 2
-    } else {
-      col$med.lwd <- col$mean.lwd <- col$dtemp.lwd <- lwd
-    }
-    if(style == 1) {
-      col$temp <- "grey" # for boxplots
-      col$dtemp <- "red" # temperature diurnal bars
-      col$na <- "red"
-      col$na.p <- "x" # pch or symbol
-      col$wet <- "lightblue"
-      col$dry <- "orange"
-      col$med <- "red"
-      col$mean <- "orange"
-    }else if(style == 2){
-      col$temp <- "grey70"
-      col$dtemp <- "grey20"
-      col$na <- "grey30"
-      col$na.p <- "x"
-      col$wet <- "grey70"
-      col$dry <- "grey50"
-      col$med <- "grey30"
-      col$mean <- "grey50"
-    }else if(style == 0){
-      col$temp <- 0
-      col$dtemp <- 1
-      col$na <- 1
-      col$na.p <- "x"
-      col$wet <- col$dry <- 0
-      col$med <- col$mean <- 1
-    }
-    col
+    main
   }
 
 ".seasmonthgrid" <-
-  function(month.abb=TRUE, month.len=NULL, month.force=FALSE,
-  month.draw=TRUE, width, num, month.col="lightgrey", month.lwd=1, ...){
+  function(width, days, start=1, rep=0, start.day=1, month.label){
+    op <- getOption("seas.month.grid")
     if(is.numeric(width)) {
-      month <- months(as.Date(paste(2000,1:12,1,sep="-")),month.abb)
-      if(is.numeric(month.len))
-        month <- strtrim(month,month.len)
-      if(missing(num))
-        num <- length(levels(mkfact(width=width,year=2000)))
-      l <- seq(0.5,num+0.5,length.out=13)
-      abline(v=l,col=month.col,lwd=month.lwd)
-      m <- l + diff(l)[1]/2
-      m <- m[-length(m)]
-      if(month.draw){
-        if(month.force)
-          mtext(month,at=m)
+      num.bin <- length(days)
+      num <- num.bin + rep
+      year.length <- round(sum(days))
+      month.days <- c(31,29,31,30,31,30,31,31,30,31,30,31)
+      if(year.length != 366){
+        if(year.length == 365)
+          month.days[2] <- 28
+        else
+          month.days <- rep(year.length/12,12)
+      }
+      if(inherits(start.day,c("POSIXct","Date"))){
+        start.std <- as.Date(format(start.day,"2000-%m-%d"))
+        start.yday <- as.integer(format(start.std,"%j"))
+      } else {
+        start.yday <- start.day
+      }
+      if(start > 1)
+        start.yday <- round(sum(start.yday-1,
+                                days[1:(start-1)]))%%year.length+1
+      start.date <- as.Date(sprintf("2000-%03i",start.yday),"%Y-%j")
+      sel.bin <- seq(start-1,start+num-2)%%num.bin+1
+      bdf <- data.frame(pos=1:num,bin=sel.bin,width=days[sel.bin])
+      bdf$yday <- cumsum(bdf$width)-bdf$width+start.yday
+      yday2pos <- function(yday){ # y=mx+b, using intervals
+        p <- findInterval(yday,bdf$yday)
+        if(p<1) p<-1
+        m <- 1/bdf$width[p]
+        b <- bdf$pos[p]-m*bdf$yday[p]
+        return(m*yday+b-0.5)
+      }
+      ym <- as.numeric(format(start.date,"%m"))
+      yd <- ifelse(ym>1,sum(month.days[1:(ym-1)]),1)
+      pos <- yday2pos(yd)
+      ln <- 1
+      while(pos[ln] < num) {
+        ym[ln+1] <- ym[ln]%%12+1
+        yd <- yd+month.days[ym[ln+1]]
+        pos[ln+1] <- yday2pos(yd)
+        ln <- length(ym)
+      }
+      fit <- pos<num+1.4
+      pos <- pos[fit]
+      ym <- ym[fit]
+      month <- months(as.Date(paste(2001,ym[-length(ym)],
+                                    15,sep="-")),op$abb)
+      if(is.numeric(op$len))
+        month <- strtrim(month,op$len)
+      abline(v=pos,col=op$col,lwd=op$lwd,lty=op$lty)
+      m <- pos[-length(ym)] + diff(pos)/2
+      fit <- m>0.2
+      m <- m[fit]
+      month <- month[fit]
+      if(missing(month.label))
+        month.label <- op$label
+      if(month.label){
+        if(op$force)
+          mtext(month,at=m,cex=par("cex")*par("cex.axis"))
         else
           axis(3,m,month,tick=FALSE,line=-1)
       }

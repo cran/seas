@@ -1,4 +1,5 @@
 \name{sdsm}
+\alias{sdsm}
 \alias{read.sdsm}
 \alias{write.sdsm}
 \title{Read and write from SDSM}
@@ -26,20 +27,20 @@ write.sdsm(dat, var)
   \item{end}{ending year}
   \item{var}{name of variable to be written from \code{dat}}
   \item{year.length}{maximum allowable year length; this is usually 366
-                   for measured data, 365 for CCCma model data and 360 for
-                     Hadley model data}
+    for measured data, 365 for CCCma model data and 360 for
+    Hadley model data}
 }
 \details{
   This function readings and writes climate data with the
   Statistical Downscaling Model, or SDSM. The model uses \file{DAT}
   extensions for input data, such as daily observations of mean
   temperature, and \file{OUT} extensions for modeled output.
-
+  
   Since the files used by SDSM do not have any meta-data,
   \code{read.sdsm} attempts to interpret this from the filename,
   otherwise this needs to be specified. The following table shows how
   this decision is made:
-    \tabular{llll}{
+  \tabular{llll}{
     \bold{grep} \tab \bold{start} \tab \bold{end} \tab \bold{year.length} \cr
     Cal         \tab 1961         \tab 2000       \tab 366 \cr
     Cur         \tab 1961         \tab 2000       \tab 365 \cr
@@ -57,13 +58,14 @@ write.sdsm(dat, var)
 \references{
   Wilby, R.L., Dawson, C.W. and Barrow, E.M. 2002,
   \sQuote{SDSM - a decision support tool for the assessment of regional
-        climate change impacts}, \emph{Environmental Modelling
-                                       Software}, \bold{77}, 473--471.
-
-  SDSM can be downloaded free-of-charge for Windows platforms from \url{http://www-staff.lboro.ac.uk/~cocwd/SDSM/}
+    climate change impacts}, \emph{Environmental Modelling Software}, \bold{77}, 473--471.
+  
+  SDSM can be downloaded free-of-charge for Windows platforms from
+  \url{http://www-staff.lboro.ac.uk/~cocwd/SDSM/}
   
   CGCM1 and HADCM3 model data for SDSM can be downloaded from the
-  Canadian Climate Impacts and Scenarios website: \url{http://www.cics.uvic.ca/scenarios/sdsm/select.cgi}
+  Canadian Climate Impacts and Scenarios website:
+  \url{http://www.cics.uvic.ca/scenarios/sdsm/select.cgi}
 }
 \seealso{\code{\link{read.msc}}}
 \examples{

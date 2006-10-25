@@ -1,23 +1,20 @@
 "precip.dep" <-
-  function(dat, norm, id) {
-    if(!inherits(dat,"data.frame"))
-      stop(gettextf("%s is not a %s object",
-                    sQuote(orig),sQuote("data.frame")))
+  function(x, norm, var="precip") {
+    orig <- as.character(substitute(x))[[1]]
+    sc <- seas.df.check(x,orig,var)
     if(!inherits(norm,"seas.norm"))
       stop(gettextf("%s is not a %s object",
                     sQuote(orig), sQuote("seas.norm")))
-    if(missing(id)) id <- dat$id[1]
-    dat <- mksub(dat,id=id)
-    dat$fact <- mkfact(dat,norm$width)
-    dat$dep <- dat$precip
-    na <- is.na(dat$precip)
-    dat$dep[na] <- 0
-    for(i in levels(dat$fact)) {
-      sl <- dat$fact==i & !na
-      n <- norm$seas[i,"precip"]
-      dat$dep[sl] <- dat$dep[sl] - n
+    x$fact <- mkseas(x,norm$width)
+    x$dep <- x[[var]]
+    na <- is.na(x[[var]])
+    x$dep[na] <- 0
+    for(i in levels(x$fact)) {
+      sl <- x$fact==i & !na
+      n <- norm$seas[i,var]
+      x$dep[sl] <- x$dep[sl] - n
     }
-    dat$dep <- cumsum(dat$dep)
-    dat
+    x$dep <- cumsum(x$dep)
+    x
   }
 

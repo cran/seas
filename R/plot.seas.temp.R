@@ -1,71 +1,95 @@
 "plot.seas.temp" <-
-  function(x, start, end, width=11, id, names=c("min_t","max_t","mean_t"),
-           unit="C", add.alt=FALSE, ylim, ...) {
-    orig <- as.character(substitute(x))
-    if(!inherits(x,"data.frame"))
-      stop(gettextf("%s is not a %s",
-                    sQuote(orig),sQuote("data.frame")))
-    if(missing(id)) id <- x$id[1]
-    if(missing(start)) start <- NULL
-    if(missing(end)) end <- start
-    dat <- mksub(x,start,end,id=id)
-    if(nrow(dat) > 0)
-      trange <- as.integer(format(range(dat$date),"%Y"))
-    main <- .seastitle(id=id,orig=orig,range=trange,...)
-    xlab <- .seasxlab(width)
-    col <- .seascols(...)
-    if(nrow(dat) <= 0) {
-      frame(); title(main$title); text(.5,.5,gettext("no data"))
-      warning("no data")
-      invisible(NA)
-    }
-    if(!unit[1] %in% c("C","F","K"))
-      warning(paste(gettextf("%s not recognized",
-                             sQuote(sprintf("unit=\"%s\"",unit[1]))),
-                    gettext("must be C, F or K"),sep="\n ... "))
-    degSymb <- iconv("\272","latin1","")
-    ylab <- sprintf("%s %s%s",gettext("temperature"),degSymb,unit)
-    names <- intersect(names,names(dat))
-    if(length(names) == 3) {
-      dat$mean_t <- dat[,names[3]]
-    } else if(length(names) == 2) {
+  function(x, width=11, start=1, rep=0, start.day=1,
+           var=c("t_min","t_max","t_mean"),
+           add.alt=FALSE, ylim, main, ...) {
+    orig <- as.character(substitute(x))[[1]]
+    sc <- seas.df.check(x,orig,var[1:2]) # only need to check first two vars
+    op <- getOption("seas.temp")
+    if (length(var)==1) {
+      stop("need at least 't_min' and 't_max' variables")
+    }else if(length(var) == 2){
       warning("calculating mean temperatures from min and max temperatures")
-      dat$mean_t <- rowMeans(dat[,names[1:2]])
-    } else
-    stop(gettextf("temperature data not found in %s",sQuote(orig)))
-    if(nrow(dat) <= 0 || sum(!is.na(dat$mean_t)) <= 0 ) {
-      frame(); title(main$title,main$line); text(.5,.5,gettext("no data"))
-      return(NA)
+      x$t_mean <- rowMeans(x[,var[1:2]])
+      var[3] <- t_mean
+    }else{
+      x$t_mean <- x[[var[3]]]
     }
-    dat$fact <- mkfact(dat,width)
-    num <- length(levels(dat$fact))
-    plot.new()
-    par(yaxs="i",xaxs="r")
+    seas.df.check(x,orig,var[3])
+    x$fact <- mkseas(x,width,start.day)
+    days <- attr(x$fact,"bin.lengths")
+    num.fact <- length(levels(x$fact))
+    num <- num.fact + rep
+    if(start<1||start>=num.fact) {
+      warning("'start' should be >= 1 and < to the number of bins")
+      start <- 1
+    }
+    if(start > 1) # re-order
+      x$fact <- factor(x$fact,levels(x$fact)[(1:num.fact-2+start)%%num.fact+1])
+    if(missing(main))
+      main <- sc$main
+    xlab <- .seasxlab(width,start.day)
+    at.label <- ((1:num)+start-2)%%num.fact+1
+    if(!is.numeric(width))
+      at.label <- levels(x$fact)[at.label]
+    degSymb <- iconv("\260","latin1","")
+    if(is.null(sc$units)) # assume degC
+      sc$units <- sprintf("%sC",degSymb)
+    if(is.null(sc$long.name))
+      sc$long.name <- "temperature"
+    unit <- substring(sc$units,nchar(sc$units))
+    if(!unit %in% c("C","F","K"))
+      warning(paste(gettextf("the unit %s in %s is not recognized",
+                             sQuote(sc$units),sQuote(sprintf("attr(%s$%s,\"units\")",
+                                                             orig,var[1]))),
+                    gettextf("this must end with %s, %s or %s",
+                             sQuote("C"),sQuote("F"),sQuote("K")),
+                    sep="\n ... "))
+    
+    ylab <- .seasylab(orig,sc$long.name,sc$units)
+    mar <- par("mar")
+    ylog <- par("ylog")
     if(add.alt){
-      mar <- c(5.1,4.1,4.1,4.1)
+      mar[4] <- mar[2]
       bty <- "u"
     } else {
-      mar <- c(5.1,4.1,4.1,2.1)
       bty <- "l"
     }
-    if(is.null(main$title))
-      mar[3] <- 2.1
-    par(mar=mar,bty=bty)
+    par(mar=mar,bty=bty,yaxs="i",xaxs="r")
     if(missing(ylim)) {
-      ylim <- range(dat$mean_t,na.rm=TRUE)
+      ylim <- range(x$t_mean,na.rm=TRUE)
       ylim <- ylim+diff(ylim)*0.04*c(-1,1) # simulate yaxs="r"
     }
+    frame()
     plot.window(xlim=c(0.5,num+0.5),ylim)
-    .seasmonthgrid(width=width,num=num,...)
-    pl <- suppressWarnings(boxplot(by(dat,dat$fact,function(x)x$mean_t),
-                                   xlab=xlab,ylab=ylab,varwidth=TRUE,add=TRUE,
-                                   col=col$temp))
-    title(main=main$title,line=main$line)
-    # compute mean diurnal variability
-    dmin <- tapply(dat[,names[1]],dat$fact,mean,na.rm=TRUE)
-    dmax <- tapply(dat[,names[2]],dat$fact,mean,na.rm=TRUE)
-    sx <- 1:length(levels(dat$fact))
-    segments(sx,dmax,sx,dmin,col=col$dtemp,lwd=col$dtemp.lwd)
+    .seasmonthgrid(width,days,start,rep,start.day)
+    varwidth<-TRUE
+    seas.bxp <- function(at){
+      pl <- boxplot(by(x,x$fact,function(x)x$t_mean),at=at,
+                    col=op$col[1],log=ylog,varwidth=varwidth,
+                    names=NA,add=TRUE)
+      # compute mean diurnal variability
+      dmin <- tapply(x[,var[1]],x$fact,mean,na.rm=TRUE)
+      dmax <- tapply(x[,var[2]],x$fact,mean,na.rm=TRUE)
+      segments(at,dmax,at,dmin,col=op$col[2],lwd=op$lwd)
+      invisible(pl)
+    }
+    pl <- seas.bxp(1:num.fact)
+    if(rep>0) {
+      n <- 1
+      if(rep>=num.fact) { # whole repetitions
+        for(n in 1:floor(rep/num.fact))
+          seas.bxp((num.fact*n+1):(num.fact*(n+1)))
+        n <- n+1
+      }
+      if(rep%%num.fact!=0) { # non-whole repetitions
+        lv <- levels(x$fact)[1:(rep%%num.fact)]
+        x <- x[x$fact %in% lv,]
+        x$fact <- factor(x$fact,lv)
+        seas.bxp((num.fact*n+1):(num.fact*n+rep%%num.fact))
+      }
+    }
+    axis(1,1:num,at.label)
+    title(main,xlab=xlab,ylab=ylab)
     if(unit=="C")
       abline(h=0)
     else if (unit=="F")
@@ -78,18 +102,18 @@
       if(unit=="C") {
         alt.ax <- pretty(c2f(ylim))
         alt.at <- f2c(alt.ax)
-        alt.unit <- "F"
+        alt.unit <- sprintf("%sF",degSymb)
       } else if(unit=="F") {
         alt.ax <- pretty(f2c(ylim))
         alt.at <- c2f(alt.ax)
-        alt.unit <- "C"
+        alt.unit <- sprintf("%sC",degSymb)
       } else { # degK
         alt.ax <- pretty(ylim-273.15)
         alt.at <- alt.ax+273.15
-        alt.unit <- "C"
+        alt.unit <- sprintf("%sC",degSymb)
       }
       axis(side=4,at=alt.at,lab=alt.ax,srt=90)
-      mtext(sprintf("%s%s",degSymb,alt.unit),side=4,line=2.8)
+      mtext(alt.unit,side=4,line=par("mgp")[1])
     }
     invisible(pl)
   }

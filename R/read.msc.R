@@ -1,20 +1,32 @@
 "read.msc" <- function(file, flags = FALSE, add.elem, format, verbose = TRUE) {
-  elem.all <- data.frame(alias=as.integer(c(1,2,3,10,11,12,13,77,123,133,61,64)),
-                         name=I(c("max_t","min_t","mean_t","rain","snow","precip","snow_d","press","rain","sun","solar","net_solar")),
-                         scale=c(.1,.1,.1,.1,.1,.1,1,.01,.1,.1,.001,.001))
+  elem.all <- data.frame(alias=c(1,2,3,10,11,12,13,77,123,133,61,64))
+  elem.all$name <- c("t_max","t_min","t_mean","rain","snow","precip",
+                     "snow_d","press","rain","sun","solar","net_solar")
+  elem.all$long.name <- c("daily maximum temperature","daily minimum temperature",
+                          "daily mean temperature","total rainfall","total snowfall",
+                          "total precipitation","snow on the groud","station pressure",
+                          "hourly rainfall","sunshine","RF1 global solar radiation",
+                          "RF4 net-all wave radiation")
+  degC <- paste(iconv("\260","latin1",""),"C",sep="")
+  rad <- paste("MJ/m",iconv("\262","latin1",""),sep="")
+  pcp <- "mm"
+  elem.all$units <- c(degC,degC,degC,"mm","mm","mm","cm","kPa","mm","hrs",rad,rad)
+  elem.all$scale <- c(.1,.1,.1,.1,.1,.1,1,.01,.1,.1,.001,.001)
+  
   if(!missing(add.elem)) {
     if(class(add.elem) %in% c("list","data.frame"))
-      elem.all <-	rbind(elem.all,add.elem)
+      elem.all <- rbind(elem.all,add.elem)
     else
       stop(gettextf("%s must either be a data.frame or a list",sQuote("add.elem")))
   }
-  orig <- as.character(substitute(file))
+  orig <- as.character(substitute(file))[[1]]
   if (is.character(file)) {
     file <- file(file, "r")
     on.exit(close(file))
   }
   if (!inherits(file, "connection")) 
-    stop(gettextf("%s must be a character string or connection",orig))
+    stop(gettextf("%s must be a character string or connection",
+                  sQuote(orig)))
   if (!isOpen(file)) {
     open(file, "r")
     on.exit(close(file))
@@ -48,7 +60,7 @@
   } else if(format=="DLY") {
     rep <- 31
     off <- 14
-  }	
+  }
   d$elem <- factor(substr(rd,off,off+2))
   elem.name <- elem.all$name[elem.all$alias %in% as.integer(levels(d$elem))]
   levels(d$elem) <- elem.name.orig <- elem.name
@@ -81,8 +93,8 @@
   FILE <- file(FILENAME,"w")
   if(format == "HLY") {
     d$date <- as.Date(paste(d$year,d$month,d$day,sep="-"))
-    d$jday <- as.integer(format(d$date,"%j"))
-    cat("id","year","jday","hour","date","datetime",elem.name,sep=",",file=FILE)
+    d$yday <- as.integer(format(d$date,"%j"))
+    cat("id","year","yday","hour","date","datetime",elem.name,sep=",",file=FILE)
     if(flags) {
       col.v <- (0:23)*2+6
       col.f <- (0:23)*2+7
@@ -105,15 +117,15 @@
     for (year in unique(s$year)) {
       ss <- s[s$year == year,]
       if(format == "HLY")
-        row <- unique(ss$jday)
+        row <- unique(ss$yday)
       else if(format == "DLY") {
-        d.mon <- unclass(table(mkfact(width="mon",year=year)))
+        d.mon <- unclass(table(mkseas(width="mon",year=year)))
         row <- unique(ss$month)
       }
       for (col in row) {
         if(format == "HLY") {
-          m <- data.frame(id=id,year=year,jday=col,hour=0:23,date=NA,datetime=NA)
-          qf <- ss$jday == col
+          m <- data.frame(id=id,year=year,yday=col,hour=0:23,date=NA,datetime=NA)
+          qf <- ss$yday == col
         } else if(format == "DLY") {
           m <- data.frame(id=id,year=year,month=col,day=1:d.mon[col])
           qf <- ss$month == col
@@ -137,34 +149,38 @@
           m[,e] <- p
           m <- m[apply(!is.na(m[,elem.name.orig,drop=FALSE]),1,any),]
           write.table(m,FILE,append=TRUE,quote=FALSE,sep=",",row.names=FALSE,col.names=FALSE)
-					#write.table(m,quote=FALSE,sep=",",row.names=FALSE,col.names=FALSE)
+	  #write.table(m,quote=FALSE,sep=",",row.names=FALSE,col.names=FALSE)
         }
-			}
-		}
-	}
-	close(FILE)
-	FILE <- file(FILENAME, "r")
-	on.exit(close(FILE), add = TRUE)
-	if(format == "HLY")
-		cc <- c("factor","integer","integer","integer","integer","integer")
-	else if(format == "DLY")
-		cc <- c("factor","integer","integer","integer")
-	if(flags)
-		cc <- c(cc,rep(c("integer","factor"),length(elem.name.orig)))
-	else
-		cc <- c(cc,rep("integer",length(elem.name.orig)))
-	o <- read.table(FILE,sep=",",header=TRUE,colClasses=cc)
-	if(format == "HLY") {
-		o$date <- as.Date(paste(o$year,o$jday),"%Y %j")
-		o$datetime <- as.POSIXct(strptime(paste(o$date,o$hour),"%F %H"))
-	} else if(format == "DLY") {
-		o$day <- as.Date(paste(o$year,o$month,o$day,sep="-"))
-		o$month <- as.integer(format(o$day,"%j"))
-		n <- names(o)
-		n[n %in% c("month","day")] <- c("jday","date")
-		names(o) <- n
-	}
-	for(i in elem.name.orig)
-		o[,i] <- o[,i] * elem.all$scale[i == elem.all$name]
-	return(o)
+      }
+    }
+  }
+  close(FILE)
+  FILE <- file(FILENAME, "r")
+  on.exit(close(FILE), add = TRUE)
+  if(format == "HLY")
+    cc <- c("factor","integer","integer","integer","integer","integer")
+  else if(format == "DLY")
+    cc <- c("factor","integer","integer","integer")
+  if(flags)
+    cc <- c(cc,rep(c("integer","factor"),length(elem.name.orig)))
+  else
+    cc <- c(cc,rep("integer",length(elem.name.orig)))
+  o <- read.table(FILE,sep=",",header=TRUE,colClasses=cc)
+  if(format == "HLY") {
+    o$date <- as.Date(paste(o$year,o$yday),"%Y %j")
+    o$datetime <- as.POSIXct(strptime(paste(o$date,o$hour),"%F %H"))
+  } else if(format == "DLY") {
+    o$day <- as.Date(paste(o$year,o$month,o$day,sep="-"))
+    o$month <- as.integer(format(o$day,"%j"))
+    n <- names(o)
+    n[n %in% c("month","day")] <- c("yday","date")
+    names(o) <- n
+  }
+  for(i in elem.name.orig){
+    info <- elem.all[elem.all$name %in% i,][1,]
+    o[,i] <- o[,i] * info$scale
+    attr(o[,i],"long.name") <- info$long.name
+    attr(o[,i],"units") <- info$units
+  }
+  o
 }

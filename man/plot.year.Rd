@@ -6,31 +6,26 @@
   statistics for a single climate station.
 }
 \synopsis{
-plot.year(x, start, end, id, precip.only = FALSE, maxy, ylim,
-          units=c("mm","C"), na.cut = 10, ...)
+plot.year(x, start.day=1, precip.only = FALSE, precip.ylim,
+          temp.ylim, na.cut = 10, ...)
 }
 \usage{
 plot.year(x)
 
-plot.year(x, start, end, id, precip.only = FALSE, maxy, ylim,
-          units=c("mm","C"), na.cut = 10, ...)
+plot.year(x, start.day=1, precip.only = FALSE, precip.ylim,
+          temp.ylim, na.cut = 10, ...)
 }
 \arguments{
   \item{x}{a \code{data.frame} of climate data}
-  \item{start}{starting year; if missing, minimum year will be used}
-  \item{end}{ending year; if missing, maximum year will be used}
-  \item{id}{unique station identifier used to extract a subset of data
-    from \code{dat}}
+  \item{start.day}{starting day of annum; either a \code{Date} or an
+    integer day of year; this influences the statistics for each year or
+    annum; such as annual precipitation sums}
   \item{precip.only}{only precipitation data is used; rain and snow ignored}
-  \item{maxy}{maximum for lower, precipitation graph}
-  \item{ylim}{\code{c(min,max)} range of temperature for upper graph}
-  \item{units}{native units for \emph{precipitation} and
-    \emph{temperature} data}
+  \item{precip.ylim}{range for precipitation graph}
+  \item{temp.ylim}{range for temperature graph}
   \item{na.cut}{minimum number of missing data points in a year to make
     it void; temperature and precipitation are treated independently}
-  \item{...}{other arguments passed to \code{\link{.seastitle}} and
-    \code{\link{.seascols}} for title style, colours, and other
-    customizations to the appearance}
+  \item{...}{ignored}
 }
 \details{
   This simply shows temperature using (\code{\link{boxplot}}s) and
@@ -46,6 +41,11 @@ plot.year(x, start, end, id, precip.only = FALSE, maxy, ylim,
 \examples{
 data(mscdata)
 
-plot.year(mscdata,id=1108447)
+plot.year(mksub(mscdata,id=1108447))
+
+plot.year(mksub(mscdata,id=1108447,
+                start=as.Date("1975-08-01"),
+                end=as.Date("2004-07-31")),
+          start.day=as.Date("2000-08-01"))
 }
 \keyword{hplot}

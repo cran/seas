@@ -1,31 +1,30 @@
 "dathomog" <-
-  function (dat1, dat2, dat, by = "date", rm.id = TRUE, plot = FALSE) {
-    if(is.numeric(dat1)) {
-      xlab <- paste(getstnname(dat1),dat1)
-      dat1 <- mksub(dat=dat,id=dat1, rm.id=rm.id)
-    } else xlab <- substitute(dat1)
-    if(is.numeric(dat2)) {
-      ylab <- paste(getstnname(dat2),dat2)
-      dat2 <- mksub(dat=dat,id=dat2, rm.id=rm.id)
-    } else ylab <- substitute(dat2)
-    if(rm.id) dat1$id <- dat2$id <- NULL
-    n1 <- names(dat1)
-    n2 <- names(dat2)
+  function (x1, x2, by = "date", plot = FALSE) {
+    orig1 <- as.character(substitute(x1))[[1]]
+    orig2 <- as.character(substitute(x2))[[1]]
+    sc1 <- seas.df.check(x1,orig1)
+    sc2 <- seas.df.check(x2,orig2)
+    n1 <- names(x1)
+    n2 <- names(x2)
+    a <- list() # copy attributes
+    for(n in n2)
+      a[[n]] <- attributes(x2[[n]])
+    for(n in n1)
+      a[[n]] <- attributes(x1[[n]])
     if(!(by %in% n1 && by %in% n2))
-      stop(gettextf("problems encountered while trying to find %s in names of dat1 and dat2 for %s argument\n",
+      stop(gettextf("problems encountered while trying to find %s in names of 'x1' and 'x2' for %s argument\n",
                     sQuote(by),sQuote("by")))
     vars.all <- union(n1,n2) # keep `by' in this one
     vars <- vars.all[!vars.all %in% by] # stip `by' out
-    vars.x <- paste(vars,".x",sep="")
-    vars.y <- paste(vars,".y",sep="")
-    dat <- merge(dat1,dat2,by=by,all=TRUE)
-    
+    vars.x <- paste(vars[vars %in% n1],".x",sep="")
+    vars.y <- paste(vars[vars %in% n2],".y",sep="")
+    dat <- merge(x1,x2,by=by,all=TRUE)
     if(plot) {
       require(MASS)
       par(ask=TRUE)
       var <- 1:length(vars)
       var <- var[sapply(dat[,vars.x],is.numeric)]
-      RsqrSym <- paste("R",iconv("\272","latin1",""),sep="")
+      RsqrSym <- paste("R",iconv("\262","latin1",""),sep="")
       for(v in var) {
         var <- vars[v]
         x <- as.numeric(dat[,vars.x[v]])
@@ -72,9 +71,11 @@
     dat[,by] <- by.c
     names(dat.x) <- vars
     dat[,vars] <- dat.x
-    for(v in 1:length(vars)) {
-      dat.na <- is.na(dat[,vars[v]])
-      dat[dat.na,vars[v]] <- dat.y[dat.na,vars.y[v]]
+    for(v in names(dat)) {
+      dat.na <- is.na(dat[[v]])
+      dat[[v]][dat.na] <- dat.y[[v]][dat.na]
     }
+    for(n in names(dat))
+      attributes(dat[[n]]) <- a[[n]]
     invisible(dat)
   }

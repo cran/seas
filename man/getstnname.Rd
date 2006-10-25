@@ -13,7 +13,7 @@ getstnname(id)
 \details{
   This function simply converts the ID used in climate data frames into
   a meaningful name using \code{mscstn}. Presently it is useful only for
-  Meteorological Survey of Canada weather stations in BC, AB and YT,
+  Meteorological Service of Canada weather stations in BC, AB and YT,
   however \code{getstnname} can be overridden by another (similar)
   function and data object for other regions.
 }

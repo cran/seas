@@ -4,7 +4,7 @@
 \title{MSC daily climate data file (DLY archive format) and instructions
   for Canadian Daily Climate Data CD-ROMs for analysis}
 \description{
-  Meteorological Survey of Canada daily climate data (DLY archive
+  Meteorological Service of Canada daily climate data (DLY archive
   format) from Vernon. This document also describes how to obtain data
   from the Canadian Daily Climate Data CD-ROMs for analysis in
   \pkg{seas}.
@@ -64,14 +64,14 @@
     platform to \sQuote{escape} the back slash characters)
   }
 
-  To export the data in a more convenient format for other programs,
-  type \code{write.csv(dat,"out.csv")}; MS Excel users may want to turn
-  \code{NA} values into the format recognized by Excel, so modify the
+  To export the data from \R in a more convenient format for other programs,
+  use \code{write.csv(dat,"out.csv")}; MS Excel users may want to turn
+  \code{NA} values into the format recognised by Excel, so modify the
   expression to \code{write.csv(dat,"out.csv",na="#N/A")}.
   }
 }
 \source{
-  Data provided by the Meteorological Survey of Canada
+  Data provided by the Meteorological Service of Canada
   (\url{http://www.msc.ec.gc.ca/}), with permission.
   
   This data may only be reproduced for personal use; any other

@@ -9,34 +9,32 @@
   rain, snow and total precipitation.
 }
 \synopsis{
-seas.norm(dat, start, end, var, norm = "days", 
-          fun = "median", ann.only = FALSE, precip.norm = FALSE)
-precip.norm(dat, start, end, fun="median", \ldots)
+seas.norm(x, var, fun = "median", norm = "days", year.filter,
+          ann.only = FALSE, precip.norm = FALSE)
+precip.norm(x, fun="median", norm = "days", year.filter)
 }
 \usage{
 # minimum
-seas.norm(dat)
+seas.norm(x)
 
-precip.norm(dat)
+precip.norm(x)
 
 # all options
-seas.norm(dat, start, end, var, norm = "days",
-          fun = "median", ann.only = FALSE, precip.norm = FALSE)
+seas.norm(x, var, fun = "median", norm = "days", year.filter,
+          ann.only = FALSE, precip.norm = FALSE)
 
-precip.norm(dat, start, end, fun="median",\ldots)
+precip.norm(x, fun="median", norm = "days", year.filter)
 }
 \arguments{
-  \item{dat}{\code{\link{seas.sum}} object}
-  \item{start}{start year; if omitted minimum year will be used}
-  \item{end}{end year; if omitted will use same as \code{start}, and if
-    \code{start} is omitted, will use maximum year}
+  \item{x}{\code{\link{seas.sum}} object}
   \item{var}{variable name for the \sQuote{normal}; if omitted will
-    use \code{dat$prime} (the prime variable of the
+    use \code{x$prime} (the prime variable of the
     \code{\link{seas.sum}} object), or if \code{precip.norm=TRUE} will
     be \code{"precip"}}
   \item{norm}{variable for normalization of the sum, usually the number
     of "days" in each bin, but it can also be "active" to estimate the
     precipitation normal for days of active precipitation}
+  \item{year.filter}{filter specific years for analysis}
   \item{fun}{\code{\link{character}} of an existing \code{function}
     object, or a \code{\link{function}} to operate across the number of
     years of observations, usually \code{"mean"} or \code{"median"}
@@ -46,16 +44,14 @@ precip.norm(dat, start, end, fun="median",\ldots)
   \item{precip.norm}{\code{\link{logical}}; computes precipitation
     normal statistics, which is done slightly differently since it
     involves rain, snow and total precipitation; if TRUE,
-    \code{dat$var} must include "rain", "snow" and "precip" summed
+    \code{x$var} must include "rain", "snow" and "precip" summed
     variables}
-  \item{\ldots}{parameters to pass to \code{seas.norm} from
-    \code{precip.norm}}
 }
 \details{
   This function calculates the statistics of precipitation data on an
-  \emph(annual) and \emph{seasonal} scope from a \code{\link{seas.sum}}
+  \emph{annual} and \emph{seasonal} scope from a \code{\link{seas.sum}}
   object.
-   
+  
   The seasonal input data are normalized by the number of days in each
   bin, to produce a precipitation rate in \sQuote{mm/day}. This is
   because the number of days in each bin is not equal. The function
@@ -64,26 +60,24 @@ precip.norm(dat, start, end, fun="median",\ldots)
   function is usually \code{"\link{median}"} or \code{"\link{mean}"},
   but it can also be a built in \R function, such as \code{"\link{var}"}
   for variance, or a composite such as:
-\itemize{
-  \item \code{function(i,na.rm)(quantile(i,.2,na.rm=na.rm,names=F))} for
-  the 20\% quantile, or
-  \item
-  \code{function(i,na.rm)(mean(i,na.rm=na.rm)/(sd(i,na.rm=na.rm)^3))}
-  for skewness.
-}
-
-   If \code{fun = "\link{mean}"}, then the statistics are
-   straightforward (using \code{\link{apply}}), however if \code{fun =
-     "median"} and there are more than 2 years of data, a different
-   approach is taken. The \dfn{median} is a special case of the
-   \dfn{quantile} function, where the probability is 50\% of the
-   population. The \code{\link{median}} and \code{\link{quantile}}
-   functions are more resistant to outliers than \code{\link{mean}}, and
-   can have advantages on precipitation data.  Precipitation occurring
-   at a given time of year does not have a normal distribution since it
-   is a value that is not always occurring. It often has a left-skewed
-   distribution, consisting of many zero measurements, and few extreme
-   precipitation events.
+  \tabular{ll}{
+    \code{function(i,na.rm)(quantile(i,.2,na.rm=na.rm,names=F))} \tab
+    the 20\% quantile \cr
+    \code{function(i,na.rm)(mean(i,na.rm=na.rm)/(sd(i,na.rm=na.rm)^3))} \tab skewness
+  }
+  
+  If \code{fun = "\link{mean}"}, then the statistics are
+  straightforward (using \code{\link{apply}}), however if \code{fun =
+    "median"} and there are more than 2 years of data, a different
+  approach is taken. The \dfn{median} is a special case of the
+  \dfn{quantile} function, where the probability is 50\% of the
+  population. The \code{\link{median}} and \code{\link{quantile}}
+  functions are more resistant to outliers than \code{\link{mean}}, and
+  can have advantages on precipitation data.  Precipitation occurring
+  at a given time of year does not have a normal distribution since it
+  is a value that is not always occurring. It often has a left-skewed
+  distribution, consisting of many zero measurements, and few extreme
+  precipitation events.
   
   In this function, if \code{fun = "median"} (default) the
   \code{\link{median}} function is only used to calculate the median
@@ -106,9 +100,9 @@ precip.norm(dat, start, end, fun="median",\ldots)
   \eqn{snow.frac.b=snow.b/(snow.b+rain.b)} is multiplied by the seasonal
   precipitation to determine the seasonal rain and snow amounts.  This
   is because the sum of rain and snow in each bin does not equal the
-  seasonal precipitation. This way, a figure with \code{precip.only =
-    TRUE} and \code{= FALSE} will have identical daily precipitation
-  rates in each bin.
+  seasonal precipitation. This way, a figure with
+  \code{precip.only = TRUE} and \code{= FALSE} will have identical daily
+  precipitation rates in each bin.
   
   The pitfalls of calculating precipitation \sQuote{normals} is that it
   assumes that precipitation occurs \emph{every} day at a constant rate
@@ -117,28 +111,35 @@ precip.norm(dat, start, end, fun="median",\ldots)
 }
 \value{
   Returns a \code{precip.norm} object, which is a \code{\link{list}}
-  with the following properties:
-  \item{$seas}{
-    \code{\link{array}} of seasonal precipitation
-    statistics. \code{precip}, \code{rain} and \code{snow} (if
+  with the following elements:
+  \item{seas}{
+    An \code{\link{array}} of seasonal precipitation
+    statistics: \code{precip}, \code{rain} and \code{snow} (if
     \code{precip.only = FALSE}) are in \sQuote{mm/day}; \code{freq} and
     \code{na} are the fraction of a day in which precipitation is
     occurring and that data is missing.
   }
-  \item{$ann}{
+  \item{ann}{
     Annual precipitation statistics. \code{precip}, \code{rain} and
     \code{snow} (if \code{precip.only = FALSE}) are in \sQuote{mm/year};
     \code{active} and \code{na} are the number of days per year which
     are active (for example, days with precipitation) and that data are
     missing.
   }
-  \item{$fun}{\code{\link{function}} used in analysis}
-  \item{$width}{from \code{dat}}
-  \item{$precip.only}{from \code{dat}}
-  \item{$range}{\code{c(start,end)} years from \code{dat}}
-  \item{$bins}{from \code{dat}}
-  \item{$id}{from \code{dat}}
-  \item{$name}{from \code{dat}; unless overrided by \code{name} argument}
+  \item{width}{from \code{x}}
+  \item{bins}{from \code{x}}
+  \item{bin.lengths}{maximum number of days in each bin}
+  \item{year.range}{from \code{x}}
+  \item{start.day}{from \code{x}}
+  \item{var}{same as input parameter}
+  \item{units}{units for \code{var}, usnig \code{\link{attr}}}
+  \item{long.name}{long name for \code{var}, using \code{attr}}
+  \item{ann.only}{ann.only same as input parameter}
+  \item{precip.only}{from same as input parameter}
+  \item{a.cut}{from \code{x}}
+  \item{fun}{\code{\link{function}} used in analysis}
+  \item{id}{from \code{x}}
+  \item{name}{from \code{x}}
 }
 \references{
   Cheny, E. W. and Kincaid, D. 1999, \emph{Numerical Mathematics and
@@ -163,15 +164,16 @@ precip.norm(dat, start, end, fun="median",\ldots)
 data(mscdata)
 
 # calculate precipitation normal
-dat.ss <- seas.sum(mscdata,id=1108447)
+dat <- mksub(mscdata,id=1108447)
+dat.ss <- seas.sum(dat)
 dat.nm <- precip.norm(dat.ss,fun="mean")
-
-# use precipitation normal
-dat.dep <- precip.dep(mscdata, dat.nm, id=1108447)
-plot(dep ~ date, dat.dep, type="l",
-  main="CPD from mean normals")
 
 # plot precipitation normal
 plot(dat.nm) # this is the same as plot.precip.norm(dat.nm)
+
+# use precipitation normal
+dat.dep <- precip.dep(dat, dat.nm)
+plot(dep ~ date, dat.dep, type="l",
+     main="CPD from mean normals")
 }
 \keyword{datagen}
