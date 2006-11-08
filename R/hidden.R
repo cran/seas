@@ -117,7 +117,7 @@ function(orig,long.name=NULL,units=NULL){
                                     15,sep="-")),op$abb)
       if(is.numeric(op$len))
         month <- strtrim(month,op$len)
-      abline(v=pos,col=op$col,lwd=op$lwd,lty=op$lty)
+      abline(v=pos,col=op$col,lwd=op$lwd*par("lwd"),lty=op$lty)
       m <- pos[-length(ym)] + diff(pos)/2
       fit <- m>0.2
       m <- m[fit]

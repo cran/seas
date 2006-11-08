@@ -40,7 +40,6 @@ setSeasOpts()
 	  available) as the first \code{"\%s"}, followed by a range of
 	  years as the second \code{"\%s"}; these are formated by
 	  \code{\link{sprintf}}; \code{"\%s\n\%s"}}
-	}
 	\item{\code{rngsep}:}{separation between ranges of years; \code{"-"},
 	  other alternatives could be \code{" to "}}
 	\item{\code{show.id}:}{show id (if available) in main title;
@@ -76,9 +75,18 @@ setSeasOpts()
 	    and adjusted for device using \code{\link{axis}}; \code{TRUE}}
 	  \item{\code{label}:}{show a month label on the grid; \code{TRUE}}
 	  \item{\code{col}:}{colour for month grid; \code{"lightgrey"}}
-	  \item{\code{lwd}:}{width for month grid lines; \code{1}}
+	  \item{\code{lwd}:}{width for month grid lines, multiplied by
+	    \code{par("lwd")}; \code{1}}
 	  \item{\code{lty}:}{style for month grid lines; \code{1}}
 	}
+      }
+    }
+    \item{\code{seas.bxp}:}{attributes which affect the display of
+      boxplots, used by various functions:
+      \describe{
+	\item{\code{boxcol}:}{default box-fill colour; \code{"lightgrey"}}
+	\item{\code{outcex}:}{outlier symbol size, multiplied by
+	  \code{par("cex")}; \code{1}}
       }
     }
     \item{\code{seas.temp}:}{attributes which affect the display of
@@ -87,15 +95,19 @@ setSeasOpts()
 	\item{\code{col}:}{colours for boxplot fill and diurnal variability
 	  lines; \code{c("lightgrey","red")}}
 	\item{\code{lwd}:}{width of diurnal variability lines in
-	  \code{plot.seas.temp}; \code{2}}
+	  \code{plot.seas.temp}, multiplied by \code{par("lwd")};
+	  \code{3}}
       }
     }
+    
     \item{\code{seas.precip}:}{attributes which affect the display of
       precipitation:
       \describe{
 	\item{\code{col}:}{colour; \code{"grey"}}
 	\item{\code{density}:}{pattern density; \code{NULL}}
 	\item{\code{angle}:}{pattern angel; \code{45}}
+	\item{\code{lwd}:}{thickness of box line, multiplied by
+	    \code{par("lwd")}; \code{1}}
       }
     }
     \item{\code{seas.rain}:}{attributes which affect the display of
@@ -104,6 +116,8 @@ setSeasOpts()
 	\item{\code{col}:}{colour; \code{"lightblue"}}
 	\item{\code{density}:}{pattern density; \code{NULL}}
 	\item{\code{angle}:}{pattern angel; \code{45}}
+	\item{\code{lwd}:}{thickness of box line, multiplied by
+	    \code{par("lwd")}; \code{1}}
       }
     }
     \item{\code{seas.snow}:}{attributes which affect the display of
@@ -112,6 +126,8 @@ setSeasOpts()
 	\item{\code{col}:}{colour; \code{"lightgrey"}}
 	\item{\code{density}:}{pattern density; \code{NULL}}
 	\item{\code{angle}:}{pattern angel; \code{-45}}
+	\item{\code{lwd}:}{thickness of box line, multiplied by
+	    \code{par("lwd")}; \code{1}}
       }
     }
     \item{\code{seas.interarrival}:}{attributes which affect the display
@@ -125,7 +141,8 @@ setSeasOpts()
       the \code{\link{median}} lines in \code{\link{image.seas.sum}}:
       \describe{
 	\item{\code{col}:}{colour; \code{"red"}}
-	\item{\code{lwd}:}{width of line; \code{1}}
+	\item{\code{lwd}:}{width of line, multiplied by
+	    \code{par("lwd")}; \code{1}}
 	\item{\code{lty}:}{style of line; \code{1}}
       }
     }
@@ -133,7 +150,8 @@ setSeasOpts()
       \code{\link{mean}} lines in \code{\link{image.seas.sum}}:
       \describe{
 	\item{\code{col}:}{colour; \code{"red"}}
-	\item{\code{lwd}:}{width of line; \code{1}}
+	\item{\code{lwd}:}{width of line, multiplied by
+	    \code{par("lwd")}; \code{1}}
 	\item{\code{lty}:}{style of line; \code{1}}
       }
     }

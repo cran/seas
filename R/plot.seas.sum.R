@@ -1,6 +1,6 @@
 "plot.seas.sum" <-
   function(x, var, norm = "days", year.filter, ylim,
-           start=1, rep=0, col = "lightgrey", main, ...){
+           start=1, rep=0, col = "lightgrey", main, ylab, ...){
     orig <- as.character(substitute(x))[[1]]
     x <- seas.sum.check(x, orig, var, norm, year.filter)
     var <- x$var
@@ -18,7 +18,8 @@
     }
     xlab <- .seasxlab(x$width,x$start.day)
     units <- if(is.null(x$units[[var]])) NULL else gettextf("%s/day",x$units[[var]])
-    ylab <- .seasylab(orig,long.name=x$long.name[[var]],units)
+    if(missing(ylab))
+      ylab <- .seasylab(orig,long.name=x$long.name[[var]],units)
     #if(add.alt) {
     #  mar <- c(5.1,4.1,4.1,4.1)
     #  bty <- "u"

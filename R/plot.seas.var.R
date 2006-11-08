@@ -1,6 +1,6 @@
 "plot.seas.var" <-
   function(x, var, width=11, start=1, rep=0, start.day=1,
-           col="lightgrey", ylim, add.alt, alt.ylab, main, ...) {
+           col, ylim, add.alt, alt.ylab, main, ylab, ...) {
     orig <- as.character(substitute(x))[[1]]
     if(missing(var))
       stop(gettextf("%s must be supplied",sQuote("var")))
@@ -22,22 +22,23 @@
     at.label <- ((1:num)+start-2)%%num.fact+1
     if(!is.numeric(width))
       at.label <- levels(x$fact)[at.label]
-    ylab <- sc$ylab
+    if(missing(ylab))
+      ylab <- sc$ylab
     if(missing(add.alt))
       add.alt <- FALSE
-    else {
+    else{
       if(is.numeric(add.alt) && length(add.alt) == 2) {
         slope <- add.alt[1]
         inter <- add.alt[2]
         add.alt <- TRUE
-      } else {
+      }else{
         warning(gettextf("'add.alt' must give the slope and intercept\nbetween the primary and secondary axis;\n use %s\n",
                          sQuote("add.imp=c(slope,inter)")))
         add.alt <- FALSE
       }
     }
     mar <- par("mar")
-    ylog <- par("ylog")
+    log <- if(par("ylog")) "y" else ""
     if(add.alt) {
       if(missing(alt.ylab))
         alt.ylab <- NULL
@@ -47,21 +48,25 @@
     } else {
       bty <- "l"
     }
-    par(mar=mar,bty=bty,yaxs="i",xaxs="r")
+    par(mar=mar,bty=bty,yaxs="i",xaxs="r",yaxt="n",xaxt="n")
     if(missing(ylim)) {
       ylim <- range(x$var,na.rm=TRUE)
       ylim <- ylim+diff(ylim)*0.04*c(-1,1) # simulate yaxs="r"
-      if(ylog)
+      if(log == "y")
         ylim[1] <- min(x$var,na.rm=TRUE)
     }
     frame()
-    plot.window(xlim=c(0.5,num+0.5),ylim)
+    plot.window(xlim=c(0.5,num+0.5),ylim,log)
     .seasmonthgrid(width,days,start,rep,start.day)
+    op <- getOption("seas.bxp")
+    if(missing(col))
+      col <- op$boxcol
     varwidth = TRUE
     seas.boxplot <- function(at){
       pl <- boxplot(by(x,x$fact,function(x)x$var),at=at,
-                    col=col,log=ylog,varwidth=varwidth,
-                    names=NA,add=TRUE)
+                    col=col,varwidth=varwidth,
+                    names=NA,add=TRUE,
+                    outcex=op$outcex*par("cex"))
       invisible(pl)
     }
     pl <- seas.boxplot(1:num.fact)
@@ -79,11 +84,13 @@
         seas.boxplot((num.fact*n+1):(num.fact*n+rep%%num.fact))
       }
     }
-    axis(1,1:num,at.label)
+    par(yaxt="s",xaxt="s")
+    axis(2,lwd=par("lwd"))
+    axis(1,1:num,at.label,lwd=par("lwd"))
     title(main,xlab=xlab,ylab=ylab)
     if(add.alt) {
       alt.ax <- pretty(ylim*slope+inter)
-      axis(side=4,at=(alt.ax-inter)/slope,lab=alt.ax,srt=90)
+      axis(side=4,at=(alt.ax-inter)/slope,lab=alt.ax,srt=90,lwd=par("lwd"))
       if(!is.null(alt.ylab))
         mtext(alt.ylab,side=4,line=par("mgp")[1])
     }

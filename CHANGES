@@ -1,5 +1,18 @@
 Please submit any suggestions or errors to me <mwtoews@sfu.ca>
 
+Version 0.3-2
+##date##
+ - several fixes from 0.3-1
+ - 'plot.seas.norm' no longer re-sets the options, and now 'leg' can
+   use c(x,y) to place legend
+ - fixed par(ylog=TRUE) for 'plot.seas.var'
+ - fixed 'mscdata' example
+ - fix in 'mkseas' with proper order of 'days' (or 'bin.lengths')
+ - re-added 'ylab' into a few plotting functions
+ - fixed 'mksub' error if data.frame element is 'array'
+ - made axises for most plotting functions to respect par('lwd')
+ - new option 'seas.bxp' for boxplot fill colour and outlier size
+
 Version 0.3-1
 2006-10-25
  - lots of changes in this release: some functions added, or renamed

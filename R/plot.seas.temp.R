@@ -1,7 +1,7 @@
 "plot.seas.temp" <-
   function(x, width=11, start=1, rep=0, start.day=1,
            var=c("t_min","t_max","t_mean"),
-           add.alt=FALSE, ylim, main, ...) {
+           add.alt=FALSE, ylim, main, ylab, ...) {
     orig <- as.character(substitute(x))[[1]]
     sc <- seas.df.check(x,orig,var[1:2]) # only need to check first two vars
     op <- getOption("seas.temp")
@@ -44,8 +44,8 @@
                     gettextf("this must end with %s, %s or %s",
                              sQuote("C"),sQuote("F"),sQuote("K")),
                     sep="\n ... "))
-    
-    ylab <- .seasylab(orig,sc$long.name,sc$units)
+    if(missing(ylab))
+      ylab <- .seasylab(orig,"Temperature",sc$units)
     mar <- par("mar")
     ylog <- par("ylog")
     if(add.alt){
@@ -54,7 +54,7 @@
     } else {
       bty <- "l"
     }
-    par(mar=mar,bty=bty,yaxs="i",xaxs="r")
+    par(mar=mar,bty=bty,yaxs="i",xaxs="r",yaxt="n",xaxt="n")
     if(missing(ylim)) {
       ylim <- range(x$t_mean,na.rm=TRUE)
       ylim <- ylim+diff(ylim)*0.04*c(-1,1) # simulate yaxs="r"
@@ -63,14 +63,16 @@
     plot.window(xlim=c(0.5,num+0.5),ylim)
     .seasmonthgrid(width,days,start,rep,start.day)
     varwidth<-TRUE
+    lwd <- par("lwd")
     seas.bxp <- function(at){
       pl <- boxplot(by(x,x$fact,function(x)x$t_mean),at=at,
                     col=op$col[1],log=ylog,varwidth=varwidth,
-                    names=NA,add=TRUE)
+                    names=NA,add=TRUE,
+                    outcex=getOption("seas.bxp")$outcex*par("cex"))
       # compute mean diurnal variability
       dmin <- tapply(x[,var[1]],x$fact,mean,na.rm=TRUE)
       dmax <- tapply(x[,var[2]],x$fact,mean,na.rm=TRUE)
-      segments(at,dmax,at,dmin,col=op$col[2],lwd=op$lwd)
+      segments(at,dmax,at,dmin,col=op$col[2],lwd=op$lwd*lwd)
       invisible(pl)
     }
     pl <- seas.bxp(1:num.fact)
@@ -88,7 +90,9 @@
         seas.bxp((num.fact*n+1):(num.fact*n+rep%%num.fact))
       }
     }
-    axis(1,1:num,at.label)
+    par(yaxt="s",xaxt="s")
+    axis(2,lwd=lwd)
+    axis(1,1:num,at.label,lwd=lwd)
     title(main,xlab=xlab,ylab=ylab)
     if(unit=="C")
       abline(h=0)
@@ -112,7 +116,7 @@
         alt.at <- alt.ax+273.15
         alt.unit <- sprintf("%sC",degSymb)
       }
-      axis(side=4,at=alt.at,lab=alt.ax,srt=90)
+      axis(side=4,at=alt.at,lab=alt.ax,srt=90,lwd=lwd)
       mtext(alt.unit,side=4,line=par("mgp")[1])
     }
     invisible(pl)

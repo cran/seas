@@ -71,6 +71,7 @@
       mar3 <- c(2.6,4.1,2.0,0.6)
     }
     par(mar=rep(0,4)) # title: no margins
+    lwd <- par("lwd")
     frame()
     text(0.5,0.5,main,cex=par("cex.main"),font=par("font.main"))
     par(mar=mar2)
@@ -85,8 +86,8 @@
           xaxt="n",yaxt="n",zlim=zlim.p,bty="n")
     .seasmonthgrid(x$width,x$bin.lengths,start,rep,x$start.day)
     box()
-    axis(1,1:num,dn[[2]]) # x-axis
-    axis(2,1:n.years,year.lab) # y-axis
+    axis(1,1:num,dn[[2]],lwd=lwd) # x-axis
+    axis(2,1:n.years,year.lab,lwd=lwd) # y-axis
     op.na <- getOption("seas.na")
     if(!is.null(op.na$pch)) {
       na.xy <- which(is.na(t(seas.p)),TRUE)
@@ -107,7 +108,7 @@
     par(mar=mar3)
     xlab3 <- .seasxlab(x$width,x$start.day)
     ylab3 <- gettext("sample quantiles (%)")
-    image(1:num,sam.q,t(seas.p),xaxt="n",bty="n",
+    image(1:num,sam.q,t(seas.p),xaxt="n",yaxt="n",bty="n",
           zlim=zlim.p,col=palette,xlab=xlab3,ylab=ylab3)
     .seasmonthgrid(x$width,x$bin.lengths,start,rep,x$start.day,FALSE)
     box()
@@ -118,9 +119,10 @@
       op.median <- getOption("seas.median")
       op.mean <- getOption("seas.mean")
       abline(h=nm.quan*100,col=op.median$col,
-             lwd=op.median$lwd,lty=op.median$lty)
+             lwd=op.median$lwd*lwd,lty=op.median$lty)
     }
-    axis(3,1:num,NA)
+    axis(2,lwd=lwd)
+    axis(3,1:num,NA,lwd=lwd)
     title(xlab=xlab3,line=0.5)
     par(mar=c(2.6,0,2.6,3.6),xaxs="i",yaxs="i",bty="n")
     frame()
@@ -136,7 +138,7 @@
     #  ll <- l^power
     #  axis(4,ll*zlim.p[2]/max(ll[-length(ll)]),l)
     #} else axis(4)
-    axis(4)
+    axis(4,lwd=lwd)
     seas.units <- if(is.null(x$units[[var]])) NULL else gettextf("%s/day",x$units[[var]])
     mtext(.seasylab(x$var,x$long.name[[var]],seas.units),
           4,2.1,cex=par("cex.axis")*.8)
@@ -159,19 +161,22 @@
       plot(var.a,1:(n.years+1),type="S",xaxt="n",yaxt="n",xaxs="i",yaxs="i",
            xlim=alim,ylim=c(1,n.years+1))
       abline(v=c(nm.mean,nm.median),col=c(op.mean$col,op.median$col),
-             lwd=c(op.mean$lwd,op.median$lwd),lty=c(op.mean$lty,op.median$lty))
-      axis(1,labels=FALSE)
+             lwd=c(op.mean$lwd,op.median$lwd)*lwd,
+             lty=c(op.mean$lty,op.median$lty))
+      axis(1,labels=FALSE,lwd=lwd)
       mtext(.seasylab(orig,gettextf("annual"),x$units[[var]]),
             1,line=par("mgp")[2],cex=par("cex.axis")*.8)
       par(mar=mar5,bg="white")
       sam.qp <- seq(0,100,length.out=length(ann.at))
-      plot(ann.at,sam.qp,type="S",yaxt="n",xaxs="i",
+      plot(ann.at,sam.qp,type="S",yaxt="n",xaxt="n",xaxs="i",
            yaxs="i",xlim=alim,ylim=c(0,100))
       abline(v=c(nm.mean,nm.median),col=c(op.mean$col,op.median$col),
-             lwd=c(op.mean$lwd,op.median$lwd),lty=c(op.mean$lty,op.median$lty))
-      abline(h=(nm.quan+(0.5-nm.quan)/n.years)*100,
-             col=op.median$col,lwd=op.median$lwd,lty=op.median$lty)
-      axis(3,labels=FALSE)
+             lwd=c(op.mean$lwd,op.median$lwd)*lwd,
+             lty=c(op.mean$lty,op.median$lty))
+      abline(h=(nm.quan+(0.5-nm.quan)/n.years)*100,col=op.median$col,
+             lwd=op.median$lwd*lwd,lty=op.median$lty)
+      axis(1,lwd=lwd)
+      axis(3,labels=FALSE,lwd=lwd)
     }
   }
 

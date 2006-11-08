@@ -10,7 +10,7 @@
 \usage{
 \method{plot}{seas.norm}(x, start=1, rep=0, ylim,
      varwidth=FALSE, normwidth=FALSE,
-     leg, add.alt=FALSE, main, \ldots)
+     leg, add.alt=FALSE, main, ylab, \ldots)
 }
 \arguments{
   \item{x}{a \code{seas.norm} object created by either
@@ -27,12 +27,15 @@
     \code{TRUE}; the default \code{FALSE} value normalizes each bar to
     the number of potentially active days}
   \item{leg}{if \code{TRUE} shows a legend summary of the statistics in
-    the upper left hand corner; if \dQuote{\code{\link{locator}}} you can
-    manually place the legend by clicking on the active graphics device}
+    the upper left hand corner; it can also be a \code{c(x,y)} pair or
+    \dQuote{\code{\link{locator}}} to manually place the legend on the
+    active graphics device}
   \item{add.alt}{\code{logical}; adds imperial units on the right-hand
     y-axis}
-  \item{main}{title for plot, otherwise this will automatically be
-    generated}
+  \item{main}{title for plot; if it is missing, then it will
+    automatically be generated}
+  \item{ylab}{y-axis label; if it is missing, then it will automatically
+    be generated}
   \item{\ldots}{ignored}
 }
 \details{

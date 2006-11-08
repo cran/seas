@@ -27,8 +27,10 @@
     if(is.null(sc$name))
       sc$name <- orig
     sc$year.range <- as.integer(format(range(x$date,na.rm=TRUE),"%Y"))
-    sc$year.length <- c(attr(x$date,"year.length"),attr(x,"year.length"),366)[1]
-    sc$main <- .seastitle(id=sc$id,name=sc$name,orig=orig,range=sc$year.range)
+    sc$year.length <- c(attr(x$date,"year.length"),
+                        attr(x,"year.length"),366)[1]
+    sc$main <- .seastitle(id=sc$id,name=sc$name,
+                          orig=orig,range=sc$year.range)
     if(!is.null(var)) {
       vn <- var %in% names(x)
       if(!all(vn))
@@ -37,11 +39,12 @@
                               "%s are not found in %s"),
                      paste(sprintf("%s",sQuote(var[!vn])),collapse=", "),
                      sQuote(orig)))
-      vn <- sapply(x[,var,drop=FALSE],function(x)sum(is.finite(x))) < 1
+      vn <- sapply(x[,var,drop=FALSE],
+                   function(x)sum(is.finite(x))) < 1
       if(any(vn))
         stop(sprintf(ngettext(sum(vn),
-                               "%s from %s has no data",
-                               "%s from %s have no data"),
+                              "%s from %s has no data",
+                              "%s from %s have no data"),
                      paste(sprintf("%s",sQuote(var[vn])),collapse=", "),
                      sQuote(orig)))
       var <- var[1]

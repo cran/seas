@@ -117,7 +117,9 @@
         stop(gettextf("%s width argument not supported",sQuote(width)))
       }
       n.bins <- length(levels)
-      levels <- levels[(start.bin:(start.bin-1+n.bins)-1)%%n.bins+1]
+      order <- (start.bin:(start.bin-1+n.bins)-1)%%n.bins+1
+      days <- days[order]
+      levels <- levels[order]
     }else if(is.numeric(width)) { # n-day bins
       yday <- as.integer(format(date,"%j"))
       yday[yday > year.length] <- year.length # trim anything bigger

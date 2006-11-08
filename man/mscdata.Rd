@@ -51,18 +51,24 @@
   variables are optional, but help annotate the graphics.
 }
 \source{
-  Data provided by the Meteorological Service of Canada
-  (\url{http://www.msc.ec.gc.ca/}), with permission. This data may only
-  be reproduced for personal use; any other reproduction is permitted
-  only with the written consent of Environment Canada
-  (\url{http://climate.weatheroffice.ec.gc.ca/contacts/}).
+  Data provided by the Meteorological Service of Canada, with
+  permission. This data may only be reproduced for personal use; any
+  other reproduction is permitted only with the written consent of
+  Environment Canada.\cr
+  
+  \url{http://www.msc.ec.gc.ca/}
+  \cr\url{http://climate.weatheroffice.ec.gc.ca/contacts/}
 }
-\seealso{\code{\link{mscstn}}, \code{\link{mksub}},
-  \code{\link{mkseas}}, \code{\link{read.msc}}}
+\seealso{
+  \code{\link{mscstn}} has MSC station ID codes, locations and names;
+  \code{\link{mksub}} produces subsets of data;  \code{\link{read.msc}}
+  reads MSC archive files, such as \code{\link{A1128551.DLY}}
+}
 \author{M.W. Toews}
 \examples{
 data(mscstn)
 data(mscdata)
+par.orig <- par(no.readonly=TRUE)
 
 # structure in R
 str(mscdata)
@@ -84,13 +90,14 @@ for(n in levels(mscdata$id)) {
   plot(precip ~ date,dat,"l",col="blue",ylim=rng.p,
     main=n)
 }
+par(par.orig)
 
 # show stations and station names available in this data frame
 data.frame(stnids, name=getstnname(stnids))
 dat <- mksub(mscdata, id=1108447)
 dat$month <- mkseas(dat, "mon")
-plot(t_mean ~ date, data=dat)
-plot(t_mean ~ date, data=dat, subset=month=="Dec")
+plot(t_mean ~ date, dat, "l")
+plot(t_mean ~ date, dat, subset=month=="Dec")
 plot.seas.temp(dat)
 plot.year(dat)
 

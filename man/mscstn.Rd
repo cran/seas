@@ -3,7 +3,7 @@
 \docType{data}
 \title{Meteorological Service of Canada station information}
 \description{
-  Meteorological Service of Canada (\acronym{MSC}) weather station data,
+  Meteorological Service of Canada weather station data,
   including national ID, station ID, Province, latitude and longitude.
 }
 \usage{data(mscstn)}

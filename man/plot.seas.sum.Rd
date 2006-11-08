@@ -7,7 +7,7 @@
 }
 \usage{
 \method{plot}{seas.sum}(x, var, norm="days", year.filter, ylim,
-    start=1, rep=0, col = "lightgrey", main, \ldots)
+    start=1, rep=0, col = "lightgrey", main, ylab, \ldots)
 }
 \arguments{
   \item{x}{a \code{seas.sum} object created by \code{\link{seas.sum}}}
@@ -22,8 +22,10 @@
   \item{start}{starting bin at left-hand side of plot}
   \item{rep}{repeat bins on right-hand side of plot}
   \item{col}{colour for boxplot, default is \code{"lightgrey"}}
-  \item{main}{main title for plot, otherwise a title will be
-    automatically generated}
+  \item{main}{title for plot; if it is missing, then it will
+    automatically be generated}
+  \item{ylab}{y-axis label; if it is missing, then it will automatically
+    be generated}
   \item{\ldots}{ignored}
 }
 \details{

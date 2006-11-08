@@ -1,6 +1,9 @@
 "mksub" <-
   function(x, start, end, id) {
     orig <- as.character(substitute(x))[[1]]
+    for(c in names(x)) # avoid array attribute errors
+      if(inherits(x[[c]],"array") && nrow(x)==dim(x[[c]])[1])
+        x[[c]] <- as.numeric(x[[c]])
     a <- list() # make a copy of the column attributes
     for(n in names(x))
       a[[n]] <- attributes(x[[n]])

@@ -1,13 +1,11 @@
 "plot.seas.norm" <-
   function(x, start=1, rep=0, ylim,
            varwidth=FALSE, normwidth=FALSE,
-           leg, add.alt=FALSE, main, ...) {
+           leg, add.alt=FALSE, main, ylab, ...) {
     orig <- as.character(substitute(x))[[1]]
     if(!inherits(x,"seas.norm"))
       stop(gettextf("%s is not a %s object",
                     sQuote(orig), sQuote("seas.norm")))
-    if(is.null(getOption("seas.ylabf")))
-      setSeasOpts()
     fun <- x$fun
     precip.norm <- x$precip.norm
     width <- x$width
@@ -62,7 +60,9 @@
         aly.ylab <- alt.unit
       }
     }else unit <- dly.unit <- NULL
-    ylab <- if(precip.norm) dly.unit else .seasylab(orig,x$long.name,dly.unit)
+    if(missing(ylab))
+      ylab <- if(precip.norm) dly.unit
+      else .seasylab(orig,x$long.name,dly.unit)
     if (missing(ylim)) {
       maxy <-if(precip.norm)
         max(rowSums(seas[,c("rain","snow")]),na.rm=TRUE)
@@ -88,34 +88,39 @@
     rx <- 1:num + active/2
     bot <- 1:num*0
     if(varwidth) border <- FALSE else border <- TRUE
+    lwd <- par("lwd")
     if(precip.norm){
       # snow boxes
       op <- getOption("seas.snow")
       rect(lx,bot,rx,seas$snow,border=border,
-           col=op$col,density=op$density,angle=op$angle)
+           col=op$col,density=op$density,angle=op$angle,lwd=op$lwd*lwd)
       # rain boxes
       op <- getOption("seas.rain")
       rect(lx,seas$snow,rx,seas$snow+seas$rain,,border=border,
-           col=op$col,density=op$density,angle=op$angle)
+           col=op$col,density=op$density,angle=op$angle,lwd=op$lwd*lwd)
     } else {# precipitation only
       op <- getOption("seas.precip")
       rect(lx,bot,rx,seas[,var],border=border,
-           col=op$col,density=op$density,angle=op$angle)
+           col=op$col,density=op$density,angle=op$angle,lwd=op$lwd*lwd)
     }
     if(missing(leg))
       leg <- ifelse(is.null(fun) || fun %in% c("mean","median"),TRUE,FALSE)
-    else if(substitute(leg) == "locator") {
-      leg <- "locator"
+    if (is.logical(leg) && leg==TRUE){
+      leg.x <- 0.5+num*.02
+      leg.y <- max(ylim)*0.98
+    }else if(substitute(leg) == "locator") {
       xy <- locator(1)
       leg.x <- xy$x
       leg.y <- xy$y
-    } else if (!is.logical(leg))
+      leg <- TRUE
+    }else if(all(is.finite(leg)) && length(leg) == 2){
+      leg.x <- leg[1]
+      leg.y <- leg[2]
+      leg <- TRUE
+    }else{
       leg <- FALSE
-    if(is.character(leg) || leg) {
-      if(is.logical(leg)) {
-        leg.x <- 0.5+num*.02
-        leg.y <- max(ylim)*0.98
-      }
+    }
+    if(leg) {
       annrate <- paste(unit,gettext("year"),sep="/")
       if(!precip.norm)
         leg.text <- paste(gettext("Total"),var,round(ann[1,var],1),annrate)
@@ -137,19 +142,19 @@
          col=getOption("seas.na")$col,border=FALSE)
     box()
     abline(h=0)
-    axis(1,1:num,seas$bin)
-    axis(2)
+    axis(1,1:num,seas$bin,lwd=lwd)
+    axis(2,lwd=lwd)
     title(main=main,xlab=xlab,ylab=ylab)
     if(add.alt) {
       mm2in <- function(v)(v/25.4)
       in2mm <- function(v)(v*25.4)
       if(unit=="mm") {
         alt.ax <- pretty(mm2in(ylim))
-        axis(side=4,at=in2mm(alt.ax),lab=alt.ax,srt=90)
+        axis(side=4,at=in2mm(alt.ax),lab=alt.ax,srt=90,lwd=lwd)
         mtext(alt.unit,side=4,line=2.8)
       } else if(unit=="in") {
         alt.ax <- pretty(in2mm(ylim))
-        axis(side=4,at=mm2in(alt.ax),lab=alt.ax,srt=90)
+        axis(side=4,at=mm2in(alt.ax),lab=alt.ax,srt=90,lwd=lwd)
         mtext(alt.unit,side=4,line=2.8)
       }
     }

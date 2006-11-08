@@ -7,15 +7,13 @@
 }
 \synopsis{
 plot.seas.var(x, var, width=11, start=1, rep=0, start.day=1,
-              col="lightgrey", ylim, add.alt, alt.ylab, main,
-              ...)
+              col, ylim, add.alt, alt.ylab, main, ylab, ...)
 }
 \usage{
 plot.seas.var(x, var)
 
 plot.seas.var(x, var, width=11, start=1, rep=0, start.day=1,
-              col="lightgrey", ylim, add.alt, alt.ylab, main,
-              \ldots)
+              col, ylim, add.alt, alt.ylab, main, ylab, \ldots)
 }
 \arguments{
   \item{x}{a \code{data.frame} with \code{\link{Date}} and \code{var}
@@ -40,7 +38,10 @@ plot.seas.var(x, var, width=11, start=1, rep=0, start.day=1,
     \code{c(5/9,32)}}
   \item{alt.ylab}{label for the alternate y-axis (the primary y-axis
     label is set through \link{attributes} for \code{var} in \code{x})}
-  \item{main}{main title for plot, otherwise this will be automatically generated}
+  \item{main}{title for plot; if it is missing, then it will
+    automatically be generated}
+  \item{ylab}{y-axis label; if it is missing, then it will automatically
+    be generated}
   \item{\ldots}{ignored}
 }
 \details{
@@ -53,7 +54,7 @@ plot.seas.var(x, var, width=11, start=1, rep=0, start.day=1,
 \seealso{
   \code{\link{plot.seas.norm}}, \code{\link{plot.year}}.
 
-  Use \code{mksub} to make a subset of \code{x}.
+  Use \code{\link{mksub}} to make a subset of \code{x}.
 }
 \examples{
 data(mscdata)
