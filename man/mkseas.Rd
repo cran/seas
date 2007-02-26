@@ -5,7 +5,7 @@
   Discretizes a date within a year into a bin (or \code{\link{factor}})
   for analysis, such as 11-day groups or by month.
 }
-\synopsis{
+\usage{
 mkseas(x, width = 11, start.day = 1, year.length, year)
 }
 \arguments{

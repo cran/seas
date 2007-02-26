@@ -56,5 +56,7 @@
     attr(d,"id") <- sc$id
     attr(d,"name") <- sc$name
     attr(d,"year.range") <- sc$year.range
+    attr(d,"p.cut") <- p.cut
+    attr(d,"inv") <- inv
     d
   }

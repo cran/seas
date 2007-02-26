@@ -1,7 +1,18 @@
+This is a summary of changes to the 'seas' package.
+
 Please submit any suggestions or errors to me <mwtoews@sfu.ca>
 
+Version 0.3-3
+2007-02-26
+ - Modified 'read.sdsm' to adapt to year.length=360 better, added attr too
+ - fixed documentation for 'mkseas' usage
+ - fixed handling of '.seasylab' in 'hidden.R[d]'; using 'var', not 'orig'
+ - 'change' now stores 'p.cut' attributes
+ - 'interarrival' now stores 'p.cut' and 'inv' attributes
+ - fixed problem with character encoding in 'mscdata'
+ 
 Version 0.3-2
-##date##
+2006-11-08
  - several fixes from 0.3-1
  - 'plot.seas.norm' no longer re-sets the options, and now 'leg' can
    use c(x,y) to place legend
@@ -21,7 +32,7 @@ Version 0.3-1
  - added 'mkann' to complement 'mkseas', which finds the annual breaks
    between seasons; this is simple if 'start.day' is January 1st, but
    seasons don't need to star here anymore
- - more use of 'attr' to pass metadata between objects; such as 'units'
+ - more use of 'attr' to pass meta-data between objects; such as 'units'
    and 'long.name' for variables in data frames
  - 'mscdata' and 'read.msc' now uses attributes for storing long names
    and units for each variable

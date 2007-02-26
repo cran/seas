@@ -11,7 +11,7 @@
 }
 \usage{
 .seasxlab(width,start.day)
-.seasylab(orig,long.name=NULL,units=NULL)
+.seasylab(var,long.name=NULL,units=NULL)
 .seastitle(main=NULL, id=NULL, name=NULL,
            orig=NULL, fun=NULL, range=NA)
 .seasmonthgrid(width, days, start=1, rep=0, start.day=1, month.label)
@@ -19,6 +19,7 @@
 \arguments{
   \item{orig}{original object name, which is used if no other name can
     be found from \code{id} or \code{name}}
+  \item{var}{original variable name in \code{names(orig)}}
   \item{width}{size of bin; see \code{\link{mkseas}}}
   \item{start.day}{the starting day of annum for the first bin; as
     either a \code{\link{Date}} or \code{\link{integer}} of day of the year}

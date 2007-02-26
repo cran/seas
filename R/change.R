@@ -66,6 +66,7 @@
     } else { # discontinuous variable, such as precipitation
       if(length(p.cut) == 1)
         p.cut[2] <- p.cut[1]
+      l$p.cut <- p.cut
       ss1 <- seas.sum(x1,var1,width,start.day,a.cut=p.cut[1])
       snm1 <- anm1 <- vnm1 <- matrix(nrow=length(var1),ncol=length(ss1$bins),
                                      dimnames=list(var1,ss1$bins))

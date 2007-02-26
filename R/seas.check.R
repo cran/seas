@@ -21,7 +21,7 @@
         stop(gettextf("more than one unique id found in %s",
                       sQuote(sprintf("%s$id",orig))))
     }
-    sc$name <- attr(x,"name")
+    #sc$name <- attr(x,"name") #partial matching of "attr" changes in R 2.5
     if(is.null(sc$name) &&!is.null(sc$id))
       sc$name <- getstnname(sc$id)
     if(is.null(sc$name))
@@ -50,14 +50,13 @@
       var <- var[1]
       sc$units <- attr(x[[var]],"units")
       sc$long.name <- attr(x[[var]],"long.name")
-      sc$ylab <- .seasylab(orig,sc$long.name,sc$units)
+      sc$ylab <- .seasylab(var,sc$long.name,sc$units)
     }
     invisible(sc)
   }
 "seas.sum.check" <-
   function(x, orig, var, norm, year.filter, ann.only){
     if(is.null(getOption("seas.main")))
-      setSeasOpts()
     if(missing(orig))
       orig <- as.character(substitute(x))[[1]]
     if(!inherits(x,"seas.sum"))

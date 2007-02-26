@@ -19,7 +19,7 @@
     xlab <- .seasxlab(x$width,x$start.day)
     units <- if(is.null(x$units[[var]])) NULL else gettextf("%s/day",x$units[[var]])
     if(missing(ylab))
-      ylab <- .seasylab(orig,long.name=x$long.name[[var]],units)
+      ylab <- .seasylab(var,long.name=x$long.name[[var]],units)
     #if(add.alt) {
     #  mar <- c(5.1,4.1,4.1,4.1)
     #  bty <- "u"

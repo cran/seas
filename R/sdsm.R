@@ -20,26 +20,17 @@
 
 "read.sdsm" <-
   function(file,start=1961,end=2000,year.length=366) {
-    if(missing(start)) {
-      sc <- data.frame(sc=I(c("Cal","Cur","2020","2050","2080")),
-                       start=c(1961,1961,2010,2040,2070),
-                       end=  c(2000,2000,2039,2069,2099),
-                       year.length=c(366,365,365,365,365))
-      for(i in 1:nrow(sc)) {
-        if(length(grep(sc[i,"sc"],file)) == 1) {
-          scl <- as.list(sc[i,])
-          start <- scl$start
-          end <- scl$end
-          year.length <- scl$year.length
-          message(sprintf("%s : %i - %i",scl$sc,start,end))
-          break
-        }
-      }
+    if(!year.length %in% c(365,366)) { # HadCM3 -- 30 days in each month
+    	days <- floor(seq(1,365,length.out=year.length))
+    	date <- sprintf("%04i-%03i",rep(start:end,each=year.length),days)
+    	date <- as.Date(date,"%Y-%j")
+    }else{
+    	start <- as.Date(paste(start,1,1,sep="-"))
+    	end <- as.Date(paste(end,12,31,sep="-"))
+    	date <- seq(start,end,by="day")
     }
-    start <- as.Date(paste(start,1,1,sep="-"))
-    end <- as.Date(paste(end,12,31,sep="-"))
+    attr(date,"year.length") <- year.length
     dat <- read.table(file,na.strings="-999.000")
-    dates <- seq(start,end,by="day")
-    dat$date <- dates[format(dates,"%j") <= year.length]
+    dat$date <- date
     dat
   }

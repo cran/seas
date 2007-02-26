@@ -36,18 +36,8 @@ write.sdsm(dat, var)
   extensions for input data, such as daily observations of mean
   temperature, and \file{OUT} extensions for modeled output.
   
-  Since the files used by SDSM do not have any meta-data,
-  \code{read.sdsm} attempts to interpret this from the filename,
-  otherwise this needs to be specified. The following table shows how
-  this decision is made:
-  \tabular{llll}{
-    \bold{grep} \tab \bold{start} \tab \bold{end} \tab \bold{year.length} \cr
-    Cal         \tab 1961         \tab 2000       \tab 366 \cr
-    Cur         \tab 1961         \tab 2000       \tab 365 \cr
-    2020        \tab 2010         \tab 2039       \tab 365 \cr
-    2050        \tab 2040         \tab 2069       \tab 365 \cr
-    2050        \tab 2070         \tab 2099       \tab 365
-  }
+  Where \code{year.length} is not equal to either 366 (normal Gregorian) or 365 (no-leap year), the days of the year are calculated as \cr
+  \code{floor(seq(1,365,length.out=year.length))}.
 }
 \value{
   \code{read.sdsm} returns a \code{data.frame} of the measured

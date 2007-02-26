@@ -36,7 +36,7 @@
       sc$units <- sprintf("%sC",degSymb)
     if(is.null(sc$long.name))
       sc$long.name <- "temperature"
-    unit <- substring(sc$units,nchar(sc$units))
+    unit <- substring(sc$units,nchar(sc$units,type="chars"))
     if(!unit %in% c("C","F","K"))
       warning(paste(gettextf("the unit %s in %s is not recognized",
                              sQuote(sc$units),sQuote(sprintf("attr(%s$%s,\"units\")",

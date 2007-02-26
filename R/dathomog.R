@@ -35,7 +35,7 @@
         suppressWarnings(lim <- range(x,y))
         if(n < 1 || diff(lim) == 0) {
           frame()
-          title(var,xlab=xlab,ylab=ylab)
+          title(var,xlab=n1,ylab=n2)
           if(n < 1)
             text(.5,.5,gettext("no overlap of data"))
           else
@@ -50,7 +50,7 @@
           lim <- lim + diff(lim)*(4*c(-1,1)/100) # expand range +/-4%
           image(kde2d(x,y,c(3,3),50,c(lim,lim)),
                 col=rev(terrain.colors(30)),xlim=lim,ylim=lim,
-                xlab=xlab,ylab=ylab,main=var)
+                xlab=n1,ylab=n2,main=var)
           if (n > 200) { x <- jitter(x); y <- jitter(y) }
           if (n < 1000) points(x,y)
           abline(inter,slope)

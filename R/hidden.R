@@ -32,8 +32,8 @@
     return(str)
   }
 ".seasylab" <-
-function(orig,long.name=NULL,units=NULL){
-  ylab <- if(is.null(long.name)) orig else long.name
+function(var,long.name=NULL,units=NULL){
+  ylab <- if(is.null(long.name)) var else long.name
   if(!is.null(units))
     ylab <- sprintf(getOption("seas.label")$fmt,ylab,units)
   ylab
