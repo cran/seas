@@ -3,73 +3,96 @@
 \alias{write.lars}
 \alias{read.lars}
 \alias{lars2help}
+\alias{Summerland.st}
+\alias{Summerland.dat}
 \alias{write.lars.scenario}
-\title{Write and read data from LARS-WG}
+\title{Read and write data from LARS-WG file formats}
 \description{
-  Write and read data from the LARS-WG stochastic weather generator;
-  also convert to a format for HELP
+  Read and write data from the LARS-WG stochastic weather generator
+  file formats; also convert to a format for HELP
 }
 \synopsis{
-write.lars(file = "", dat, var, start, end)
-read.lars(file,head=c("year","yday","t_max","t_min","precip","solar"),
-           year.offset=0)
-lars2help(infile,outfile, year.offset, region)
-write.lars.scenario(file, dat1, dat2, name="anomaly")
+read.lars(stfile, year.offset=0)
+write.lars(x,stfile,datfile,site,lat,lon,alt)
+
+lars2help(infile,outfile, year.offset, site)
+write.lars.scenario(file, x1, x2, name="anomaly")
 }
 \usage{
-write.lars(file = "", dat, var, start, end)
-# write observed climate data (*.sr)
-write.lars(file = "", dat, var, start, end)
+# read synthetic or observed *.st file
+read.lars(stfile, year.offset=0)
 
-# read synthetic (*.dat) or observed data (*.sr)
-read.lars(file,
-	head=c("year","yday","t_max","t_min","precip","solar"),
-        year.offset=0)
+# write observed climate data (*.st and/or *.sr)
+write.lars(x,stfile,datfile,site,lat,lon,alt)
 
 # experimental functions (may not work great; or at all!)
-lars2help(infile, outfile, year.offset, region)
-write.lars.scenario(file, dat1, dat2, name="anomaly")
+lars2help(infile, outfile, year.offset, site)
+write.lars.scenario(file, x1, x2, name="anomaly")
 }
 \arguments{
-  \item{file}{name of file; use extension \file{*.sr} for writing
-    \sQuote{observed} weather, and \code{read.lars} can read either
-    \file{*.sr} observed files or \file{*.dat} synthetically generated
-    files; \code{file=""}, will print to console}
+  \item{stfile}{file name with \file{*.st} extension; this is a
+    \sQuote{site file} for LARS-WG which contains meta-data for the
+    climate data, and has the location of the the climate data file; for
+    \code{write.lars}, if this variable is \code{\link{NA}} or
+    \code{\link{FALSE}}, this file will not be written (however,
+    \code{datfile} must be defined)}
+  \item{datfile}{file name with either \file{*.sr} or \file{*.dat}
+    extension; contains climate data, as described by \code{stfile};
+    this does not need to be set if \code{stfile} is defined, as this
+    datum is found in the \file{st} file}
+  \item{file}{file name with a \file{*.sce} extension; this is a
+    \sQuote{scenario} file with absolute and relative changes of climate
+    data}
   \item{infile}{input file}
   \item{outfile}{output file}
-  \item{dat}{\code{data.frame} of climate data}
-  \item{dat1}{same as \code{dat}}
-  \item{dat2}{same as \code{dat}}
-  \item{var}{variables for each column (e.g.,
-    \code{c("MAX","MIN","RAIN","RAD")}); if missing, will try and use
-    \code{t_min}, \code{t_max}, \code{precip}, and \code{solar} within
-    \code{names(dat)}}
-  \item{start}{either an \code{integer} starting year (assumed to be 1
-    of January), or a \code{\link{Date}} object of the exact date}
-  \item{end}{either an \code{integer} ending year (assumed to be 31 of
-    December), or a \code{Date} object of the exact date}
-  \item{head}{names from \code{file} to be used for \code{dat}}
-  \item{year.offset}{offset of years between \code{file} and what is
-    needed in \R using \code{Date}}
-  \item{region}{region name for HELP file}
-  \item{name}{name of scenario}
+  \item{x}{\code{data.frame} of climate data}
+  \item{x1}{same as \code{x}}
+  \item{x2}{same as \code{x}}
+  \item{year.offset}{offset of years between what is contained in the
+    data files and what is needed in \R to produce a reasonable
+    \sQuote{\code{\link{Date}}}; this is required, for example, if
+    synthetic data are produced that start from an arbitrary year
+    \sQuote{1} but represent climate from the year \sQuote{2000}}
+  \item{site}{same as \sQuote{[SITE]} in \file{st} file; if missing,
+    this will try to read from \code{attr(x$name)}; this is the same as
+    a \sQuote{region} for HELP}
+  \item{name}{scenario name}
+  \item{lat}{same as \sQuote{LAT} in \file{st} file; if missing, this
+    will try to be read from \code{attr(x$latitude)}}
+  \item{lon}{same as \sQuote{LON} in \file{st} file; if missing, this
+    will try to be read from \code{attr(x$longitude)}}
+  \item{alt}{same as \sQuote{ALT} in \file{st} file; if missing, this
+    will try to be read from \code{attr(x$elevation)}}
 }
 \details{
-  These functions interface with the LARS-WG files. The variable headers
-  are not located within the \file{*.sr} or \file{*.dat} files, so they
-  need to be explicitly defined using the \code{var} parameter. These
-  should be the same found in the station file, with \file{*.st}
-  extension, which is used exclusively be LARS-WG. However, the
-  \sQuote{YEAR} and \sQuote{JDAY} variables do \emph{not} need to be
-  defined, since they are assumed to be in the first and second columns,
-  respectively, and are automatically converted to and from the \R
-  \code{\link{Date}} object.
+  These functions interface with the LARS-WG files (Version 4.0), which
+  is a stochastic weather generator by Mikhail Semenov.
+
+  The climate data files used with LARS-WG have two parts: (1)~a
+  \sQuote{site file} with a \file{st} extension, containing the
+  meta-data; and (2)~a data file with a \file{*.sr} or \file{*.dat}
+  extension, containing all the data. The variable names are translated
+  according to the following table:
+
+  \tabular{ll}{
+    \emph{seas}   \tab \emph{LARS-WG} \cr
+    \code{year}  \tab \sQuote{YEAR} \cr
+    \code{yday}  \tab \sQuote{JDAY} \cr
+    \code{t_min} \tab \sQuote{MIN} \cr
+    \code{t_max} \tab \sQuote{MAX} \cr
+    \code{preicp}\tab \sQuote{RAIN} \cr
+    \code{solar} \tab \sQuote{RAD} \cr
+    \code{sun}   \tab \sQuote{SUN} \cr
+    \code{pet}   \tab \sQuote{PET} \cr
+  }
+
+  To write climate data from \R to a LARS-WG file, the \code{data.frame}
+  names need to match those in the \pkg{seas}-side of the table.
   
   Data exported from \code{write.lars} always has legal (according to
-  the Gregorian calendar) and increasing sequence of days between
-  \code{start} and \code{end} (even if there are gaps in
-  \code{dat}). Missing data values are written as \code{-99.}, as
-  specified in the LARS-WG manual, Version 4.0.
+  the Gregorian calendar) and increasing sequence of days (even if there
+  are gaps in \code{x$date}). Missing data values are written as
+  \code{-99}.
 
   \code{lars2help} and \code{write.lars.scenario} are experimental
   functions to translate data between LARS and HELP (see
@@ -77,15 +100,35 @@ write.lars.scenario(file, dat1, dat2, name="anomaly")
 }
 \author{M.W. Toews}
 \references{
-  LARS-WG was developed by M.A. Semenov, and can be downloaded for
-  academic and research interests from
+  LARS-WG was can be downloaded for academic and research uses from
   \url{http://www.rothamsted.bbsrc.ac.uk/mas-models/larswg.php}
+
+  Semenov, M.A. and Barrow, E.M. (1997) \dQuote{Use of a stochastic
+    weather generator in the development of climate change
+    scenarios}. \emph{Climate Change}: \bold{35}, 397--414.
+  doi: 10.1023/A:1005342632279
 }
-\seealso{\code{\link{write.help}}, \code{\link{read.sdsm}}}
-%\dontrun{
-%# add later
-%}
-%}
+\seealso{\code{\link{write.help}}, \code{\link{read.sdsm}},
+  \code{\link{summerland}} example synthetic data}
+\examples{
+stfile <- system.file("data/summerland.st",package="seas")
+print(stfile)
+summ <- read.lars(stfile,year.offset=1960)
+head(summ)
+str(summ)
+
+# plot temperature
+summ$t_mean <- rowMeans(summ[,c("t_min","t_max")])
+plot.seas.temp(summ)
+
+# plot solar radiation
+plot.seas.var(summ,"solar")
+
+# plot precipitation
+summ.ss <- seas.sum(summ)
+image(summ.ss)
+plot(seas.norm(summ.ss))
+}
 \keyword{file}
 \keyword{connection}
 \keyword{utilities}

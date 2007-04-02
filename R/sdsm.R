@@ -29,8 +29,8 @@
     	end <- as.Date(paste(end,12,31,sep="-"))
     	date <- seq(start,end,by="day")
     }
-    attr(date,"year.length") <- year.length
-    dat <- read.table(file,na.strings="-999.000")
-    dat$date <- date
-    dat
+    x <- read.table(file,na.strings="-999.000")
+    x$date <- date
+    attr(x$date,"year.length") <- year.length
+    x
   }

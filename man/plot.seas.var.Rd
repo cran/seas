@@ -6,14 +6,16 @@
   Plot seasonal normals of a variable using boxplots.
 }
 \synopsis{
-plot.seas.var(x, var, width=11, start=1, rep=0, start.day=1,
-              col, ylim, add.alt, alt.ylab, main, ylab, ...)
+plot.seas.var(x, var, width=11, start=1, rep=0, start.day=1, col,
+              ylim, add.alt, alt.ylab, main, ylab, ylog, ...)
 }
 \usage{
+# minimal usage
 plot.seas.var(x, var)
 
-plot.seas.var(x, var, width=11, start=1, rep=0, start.day=1,
-              col, ylim, add.alt, alt.ylab, main, ylab, \ldots)
+# full options and default
+plot.seas.var(x, var, width=11, start=1, rep=0, start.day=1, col,
+              ylim, add.alt, alt.ylab, main, ylab, ylog, \ldots)
 }
 \arguments{
   \item{x}{a \code{data.frame} with \code{\link{Date}} and \code{var}
@@ -35,13 +37,18 @@ plot.seas.var(x, var, width=11, start=1, rep=0, start.day=1,
     \code{c(slope,inter)}; for example, if the primary measure is in
     \enc{°}{degrees }C, a secondary scale in K would be
     \code{c(1,273.15)}, or in \enc{°}{degrees }F would be
-    \code{c(5/9,32)}}
+    \code{c(5/9,32)}; if \code{ylog=TRUE}, then this can also be
+    \code{TRUE} to display the \eqn{\log_{10}}{log10} transformed values of
+    \code{var} on the alternative axis}
   \item{alt.ylab}{label for the alternate y-axis (the primary y-axis
     label is set through \link{attributes} for \code{var} in \code{x})}
   \item{main}{title for plot; if it is missing, then it will
     automatically be generated}
   \item{ylab}{y-axis label; if it is missing, then it will automatically
     be generated}
+  \item{ylog}{used to \eqn{\log_{10}}{log10} transform values of
+    \code{var} for the boxplots; this has a similar but different affect
+    than specifying \code{par(ylog=TRUE)} before this function}
   \item{\ldots}{ignored}
 }
 \details{
@@ -57,15 +64,17 @@ plot.seas.var(x, var, width=11, start=1, rep=0, start.day=1,
   Use \code{\link{mksub}} to make a subset of \code{x}.
 }
 \examples{
+opar <- par(no.readonly=FALSE)
+on.exit(par(opar))
 data(mscdata)
 dat <- mksub(mscdata,id=1108447)
-mar <- par("mar")
 
 plot.seas.var(dat, var="t_max", col="tomato",
   add.alt=c(5/9,32), alt.ylab="F")
 abline(h=0)
 
-par(mar=mar) # return margin back
+par(opar) # reset graphics parameters
+
 plot.seas.var(dat, var="t_min",
   start=18,rep=16)
 
@@ -73,7 +82,16 @@ pdat <- dat[dat$precip>0,]
 attr(pdat$precip,"long.name") <- "precipitation intensity"
 attr(pdat$precip,"units") <- "mm/day"
 
+par(ylog=TRUE)
 plot.seas.var(pdat, var="precip", col="azure")
+title(sub="These boxplots are simply plotted on a log-y scale")
 
+par(opar)
+
+plot.seas.var(pdat, var="precip", col="azure", ylog=TRUE)
+title(sub="These boxplots are based on log-transformed values")
+
+plot.seas.var(pdat, var="precip", col="azure", ylog=TRUE, add.alt=TRUE)
+title(sub="The actual axis for graph is on the right-side")
 }
 \keyword{hplot}

@@ -10,7 +10,7 @@
     }else if(length(var) == 2){
       warning("calculating mean temperatures from min and max temperatures")
       x$t_mean <- rowMeans(x[,var[1:2]])
-      var[3] <- t_mean
+      var[3] <- "t_mean"
     }else{
       x$t_mean <- x[[var[3]]]
     }
@@ -54,25 +54,22 @@
     } else {
       bty <- "l"
     }
-    par(mar=mar,bty=bty,yaxs="i",xaxs="r",yaxt="n",xaxt="n")
-    if(missing(ylim)) {
+    par(mar=mar,bty=bty,xaxs="r",yaxt="n",xaxt="n")
+    if(missing(ylim))
       ylim <- range(x$t_mean,na.rm=TRUE)
-      ylim <- ylim+diff(ylim)*0.04*c(-1,1) # simulate yaxs="r"
-    }
     frame()
     plot.window(xlim=c(0.5,num+0.5),ylim)
     .seasmonthgrid(width,days,start,rep,start.day)
     varwidth<-TRUE
     lwd <- par("lwd")
     seas.bxp <- function(at){
-      pl <- boxplot(by(x,x$fact,function(x)x$t_mean),at=at,
-                    col=op$col[1],log=ylog,varwidth=varwidth,
-                    names=NA,add=TRUE,
+      pl <- boxplot(t_mean ~ fact,x,at=at,col=op$col[1],
+                    log=ylog,varwidth=varwidth,names=NA,add=TRUE,
                     outcex=getOption("seas.bxp")$outcex*par("cex"))
       # compute mean diurnal variability
       dmin <- tapply(x[,var[1]],x$fact,mean,na.rm=TRUE)
       dmax <- tapply(x[,var[2]],x$fact,mean,na.rm=TRUE)
-      segments(at,dmax,at,dmin,col=op$col[2],lwd=op$lwd*lwd)
+      segments(at,dmax,at,dmin,col=op$col[2],lwd=op$lwd*lwd,lend="square")
       invisible(pl)
     }
     pl <- seas.bxp(1:num.fact)
@@ -101,8 +98,8 @@
     else if (unit=="K")
       abline(h=273.15)
     if(add.alt) {
-      f2c <- function(v)(5*(v-32)/9)
-      c2f <- function(v)(32+9*v/5)
+      f2c <- function(v)((v-32)/1.8)
+      c2f <- function(v)(1.8*v+32)
       if(unit=="C") {
         alt.ax <- pretty(c2f(ylim))
         alt.at <- f2c(alt.ax)

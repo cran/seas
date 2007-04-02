@@ -9,7 +9,7 @@
   from the Canadian Daily Climate Data CD-ROMs for analysis in
   \pkg{seas}.
 }
-\usage{data(mscdata)}
+%\usage{data(mscdata)}
 \format{
   MSC DLY archive format (4-digit year).
 }
@@ -66,7 +66,7 @@
 
   To export the data from \R in a more convenient format for other programs,
   use \code{write.csv(dat,"out.csv")}; MS Excel users may want to turn
-  \code{NA} values into the format recognised by Excel, so modify the
+  \code{NA} values into the format recognized by Excel, so modify the
   expression to \code{write.csv(dat,"out.csv",na="#N/A")}.
   }
 }
@@ -94,7 +94,8 @@
 file <- system.file("data/A1128551.DLY",package="seas")
 print(file)
 dat <- read.msc(file)
-print(head(dat))
+head(dat)
+str(dat)
 
 plot.seas.temp(dat)
 plot.year(dat)

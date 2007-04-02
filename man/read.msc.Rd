@@ -96,10 +96,10 @@ read.msc(file, flags = FALSE, add.elem, format, verbose = TRUE)
   in \code{\link{A1128551.DLY}}).
 }
 \note{
-  This function is not optimised, since it uses many \code{\link{for}}
+  This function is not optimized, since it uses many \code{\link{for}}
   loops.  It would be nice to have this function operate faster, however
   this is not priority for me right now. If any one is interested in
-  optimising this function (by writing the second half in C or FORTRAN),
+  optimizing this function (by writing the second half in C or FORTRAN),
   please contact me, and I will supply you with example archive files.
 }
 \author{M.W. Toews}

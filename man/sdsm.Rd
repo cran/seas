@@ -5,7 +5,7 @@
 \title{Read and write from SDSM}
 \description{
   Reads and writes the data format used in
-  SDSMs \file{DAT} and \file{OUT} extensions.
+  SDSM's \file{DAT} and \file{OUT} extensions.
 }
 \synopsis{
 read.sdsm(file, start = 1961, end = 2000, year.length = 366)

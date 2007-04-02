@@ -7,8 +7,12 @@
                           "total precipitation","snow on the groud","station pressure",
                           "hourly rainfall","sunshine","RF1 global solar radiation",
                           "RF4 net-all wave radiation")
-  degC <- paste(iconv("\260","latin1",""),"C",sep="")
-  rad <- paste("MJ/m",iconv("\262","latin1",""),sep="")
+  deg <- iconv("\260","latin1","")
+  deg <- if (is.na(deg)) "deg" else deg
+  degC <- paste(deg,"C",sep="")
+  sq <- iconv("\262","latin1","")
+  sq <- if (is.na(sq)) "^2" else sq
+  rad <- paste("MJ/m",sq,sep="")
   pcp <- "mm"
   elem.all$units <- c(degC,degC,degC,"mm","mm","mm","cm","kPa","mm","hrs",rad,rad)
   elem.all$scale <- c(.1,.1,.1,.1,.1,.1,1,.01,.1,.1,.001,.001)

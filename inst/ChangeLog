@@ -1,6 +1,19 @@
-This is a summary of changes to the 'seas' package.
-
+This is a summary of changes to the 'seas' package for R.
 Please submit any suggestions or errors to me <mwtoews@sfu.ca>
+
+Version 0.3-4
+2007-04-02
+ - fixed minor error with named attributes for R 2.5.0
+ - fixed error in 'plot.seas.temp' when 't_mean' is missing
+ - 'read.sdsm' now considers units
+ - 'read.lars' rewritten - now reads 'st' file for meta-data, then reads
+    'sr/dat' file from the meta-data in 'st'
+ - added doi from Elsevier to paper/package 'citation("seas")'
+ - brought back 'ylog' parameter to 'plot.seas.var', now does
+    log-transformed boxplots, and can be used with 'add.alt=TRUE'
+ - removed 'yaxs="i"' from a few functions; these can be set normally
+    through 'par', if desired
+ - allowed 'par("ylog")' to work with 'plot.seas.sum'
 
 Version 0.3-3
 2007-02-26

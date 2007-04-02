@@ -17,7 +17,7 @@
     maximum year}
   \item{id}{unique station identifier (if present), which is assumed to
     be a column of \code{x} as \code{x$id}; it is used to extract a
-    subset of data from a sinlge ID}
+    subset of data from a single ID}
 }
 \details{
   This utility function is useful for creating temporal subsets of

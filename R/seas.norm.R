@@ -147,7 +147,7 @@
                                na.rm=TRUE,names=FALSE)
           } else seas$snow <- seas$rain*0
           # calculate the fraction of rain
-          rs.f <- seas$rain/(seas$rain+seas$snow)
+          rs.f <- with(seas,rain/(rain+snow))
           if(any(is.nan(rs.f)))
             rs.f[seas$rain+seas$snow==0] <- 1 # avoid divide by zero
           seas$rain <- seas$var * rs.f

@@ -21,7 +21,8 @@
         stop(gettextf("more than one unique id found in %s",
                       sQuote(sprintf("%s$id",orig))))
     }
-    #sc$name <- attr(x,"name") #partial matching of "attr" changes in R 2.5
+    if("name" %in% names(attributes(x)))
+      sc$name <- attr(x,"name")
     if(is.null(sc$name) &&!is.null(sc$id))
       sc$name <- getstnname(sc$id)
     if(is.null(sc$name))

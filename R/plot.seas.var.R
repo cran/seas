@@ -1,6 +1,6 @@
 "plot.seas.var" <-
   function(x, var, width=11, start=1, rep=0, start.day=1,
-           col, ylim, add.alt, alt.ylab, main, ylab, ...) {
+           col, ylim, add.alt, alt.ylab, main, ylab, ylog, ...) {
     orig <- as.character(substitute(x))[[1]]
     if(missing(var))
       stop(gettextf("%s must be supplied",sQuote("var")))
@@ -22,6 +22,15 @@
     at.label <- ((1:num)+start-2)%%num.fact+1
     if(!is.numeric(width))
       at.label <- levels(x$fact)[at.label]
+    if(missing(ylog) || !is.logical(ylog))
+      ylog <- FALSE
+    if(ylog) { # transform the data; different boxplot than par(ylog=TRUE)
+      if(min(x$var,na.rm=TRUE) <= 0)
+        warning("values of 'x' will be removed for log10 transform")
+      x <- x[x$var>0,]
+      x$ovar <- x$var
+      x$var <- log10(x$ovar)
+    }
     if(missing(ylab))
       ylab <- sc$ylab
     if(missing(add.alt))
@@ -31,9 +40,9 @@
         slope <- add.alt[1]
         inter <- add.alt[2]
         add.alt <- TRUE
-      }else{
+      }else if(!ylog){
         warning(gettextf("'add.alt' must give the slope and intercept\nbetween the primary and secondary axis;\n use %s\n",
-                         sQuote("add.imp=c(slope,inter)")))
+                         sQuote("add.alt=c(slope,inter)")))
         add.alt <- FALSE
       }
     }
@@ -42,20 +51,23 @@
     if(add.alt) {
       if(missing(alt.ylab))
         alt.ylab <- NULL
-      else
-        mar[4] <- mar[2] # copy left-hand side margin
+      mar[4] <- mar[2] # copy left-hand side margin
       bty <- "u"
     } else {
       bty <- "l"
     }
-    par(mar=mar,bty=bty,yaxs="i",xaxs="r",yaxt="n",xaxt="n")
-    if(missing(ylim)) {
+    par(mar=mar,bty=bty,xaxs="r",yaxt="n",xaxt="n")
+    if(missing(ylim))
       ylim <- range(x$var,na.rm=TRUE)
-      ylim <- ylim+diff(ylim)*0.04*c(-1,1) # simulate yaxs="r"
-      if(log == "y")
-        ylim[1] <- min(x$var,na.rm=TRUE)
-    }
+    else if(ylog)
+      ylim <- log10(ylim)
     frame()
+    if(ylog) { # need to determine yaxp from original values
+      plot.window(xlim=c(0,1),10^ylim,log="y")
+      yaxp <- par("yaxp")
+      ylax <- axTicks(2)
+      par(ylog=FALSE) # set back
+    }
     plot.window(xlim=c(0.5,num+0.5),ylim,log)
     .seasmonthgrid(width,days,start,rep,start.day)
     op <- getOption("seas.bxp")
@@ -63,10 +75,8 @@
       col <- op$boxcol
     varwidth = TRUE
     seas.boxplot <- function(at){
-      pl <- boxplot(by(x,x$fact,function(x)x$var),at=at,
-                    col=col,varwidth=varwidth,
-                    names=NA,add=TRUE,
-                    outcex=op$outcex*par("cex"))
+      pl <- boxplot(var ~ fact,x,at=at,col=col,varwidth=varwidth,
+                    names=NA,add=TRUE,outcex=op$outcex*par("cex"))
       invisible(pl)
     }
     pl <- seas.boxplot(1:num.fact)
@@ -85,12 +95,19 @@
       }
     }
     par(yaxt="s",xaxt="s")
-    axis(2,lwd=par("lwd"))
+    if(ylog)
+      axis(2,log10(ylax),ylax,lwd=par("lwd"))
+    else
+      axis(2,lwd=par("lwd"))
     axis(1,1:num,at.label,lwd=par("lwd"))
     title(main,xlab=xlab,ylab=ylab)
     if(add.alt) {
-      alt.ax <- pretty(ylim*slope+inter)
-      axis(side=4,at=(alt.ax-inter)/slope,lab=alt.ax,srt=90,lwd=par("lwd"))
+      if(ylog){ # done differently for ylog
+        axis(4)
+      } else {
+        alt.ax <- pretty(ylim*slope+inter)
+        axis(side=4,at=(alt.ax-inter)/slope,lab=alt.ax,srt=90,lwd=par("lwd"))
+      }
       if(!is.null(alt.ylab))
         mtext(alt.ylab,side=4,line=par("mgp")[1])
     }

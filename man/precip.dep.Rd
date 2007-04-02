@@ -20,17 +20,11 @@ precip.dep(x, norm, var="precip")
   period of time. This is especially useful for identifying changes in
   precipitation, and is useful for relating to groundwater recharge
   patterns
-  (i.e., \url{http://wlapwww.gov.bc.ca/rfc/river_forecast/grwater/obsw002.html}).
+  (e.g., \url{http://www.env.gov.bc.ca/wsd/data_searches/obswell/obsw002.html}).
 }
 \value{
   Returns a \code{data.frame} similar to \code{x}, but contains the
   departures in the \code{dep} column.
-}
-\references{
-  Hodge, W.S., 2001, \emph{A Preliminary Survey of Methyl Tertiary-Butyl
-    Ether (\acronym{MTBE}) in Groundwater at Selected Well Sites in
-    British Columbia, Canada}, Groundwater Section, Water Protection
-    Branch, Ministry of Water, Land and Air Protection.
 }
 \author{M.W. Toews}
 \note{

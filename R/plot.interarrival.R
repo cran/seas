@@ -30,9 +30,8 @@
     num.fact <- length(levels(x$fact))
     num <- num.fact + rep
     seas.boxplot <- function(x,at,var,col){
-      pl <- boxplot(by(x,x$fact,function(x)x[[var]]),at=at,
-                    col=col,log=ylog,varwidth=TRUE,
-                    names=NA,add=TRUE)
+      pl <- boxplot(as.formula(paste(var,"~ fact")),x,at=at,col=col,log=ylog,
+                    varwidth=TRUE,names=NA,add=TRUE)
       lines(at,tapply(x[[var]],x$fact,mean,na.rm=TRUE),lwd=2)
       invisible(pl)
     }
