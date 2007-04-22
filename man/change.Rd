@@ -7,23 +7,22 @@
   each seasonal state.
 }
 \synopsis{
-change(x1, x2, var, var1=var, var2=var, width="mon",
+change(x1, x2, var1, var2=var1, width="mon",
        cent="mean",sprd="sd", disc=FALSE, inter=FALSE,
-       p.cut=0.3, start.day=1, year.length)
+       p.cut=0.3, start.day=1, calendar)
 }
 \usage{
 # minimum usage
-change(x1, x2, var)
+change(x1, x2, var1)
 
 # all options
-change(x1, x2, var, var1=var, var2=var, width="mon",
+change(x1, x2, var1, var2=var1, width="mon",
        cent="mean",sprd="sd", disc=FALSE, inter=FALSE,
-       p.cut=0.3, start.day=1, year.length)
+       p.cut=0.3, start.day=1, calendar)
 }
 \arguments{
   \item{x1}{a \code{data.frame} of seasonal data}
   \item{x2}{a second \code{data.frame} of seasonal data}
-  \item{var}{a common variable in \code{x1} and \code{x2}}
   \item{var1}{a variable in \code{x1}}
   \item{var2}{a variable in \code{x2}}
   \item{width}{the width of the bins, see \code{\link{mkseas}} for more
@@ -37,13 +36,16 @@ change(x1, x2, var, var1=var, var2=var, width="mon",
     (standard-deviation), however \code{\link{mad}} or other functions
     can be used too}
   \item{disc}{if the data are discontinuous, the \code{seas.sum} objects
-    are created for \code{var} to determine the changes; this is ideal
-    for precipitation, and other sparsely distributed variables}
+    are created for \code{var1}/\code{var2} to determine the changes;
+    this is ideal for precipitation, and other sparsely distributed
+    variables}
   \item{inter}{\code{\link{interarrival}}s are calculated, and changes
     are found between \emph{wet} and \emph{dry} series}
   \item{p.cut}{cut-off for wet/dry; see \code{\link{interarrival}}}
-  \item{start.day}{}
-  \item{year.length}{if non-Gregorian calendars are used, this }
+  \item{start.day}{starting day}
+  \item{calendar}{calendar; if not specified it will try to read this
+    from the attributes, otherwise it is assumed to be a proleptic
+    Gregorian calendar; see \code{\link{year.length}}}
 }
 \details{
   This function is useful for finding changes between different states of
@@ -58,7 +60,8 @@ change(x1, x2, var, var1=var, var2=var, width="mon",
 }
 \value{
   Returns a complex \code{\link{list}} of relative and absolute (if
-  applicable) changes of \code{var} between \code{x1} and \code{x2}.
+  applicable) changes of \code{var1}/\code{var2} between \code{x1} and
+  \code{x2}.
 
   Seasonal and annual changes are identified independently of each
   other; where annual changes have a \code{ann} prefix.

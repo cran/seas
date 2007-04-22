@@ -20,27 +20,10 @@
 }
 \details{
   The sample file name was generated in LARS-WG from calibration of data
-  from Summerland (MSC ID: 1127800). Thirty-years were generated.
+  from Summerland (MSC ID: 1127800). Thirty-years were generated, each
+  synthetic year has 365-days.
 }
-\seealso{\code{\link{read.lars}}}
+\seealso{\code{\link{read.lars}}, which contains an example using
+  these files}
 \author{M.W. Toews}
-\examples{
-stfile <- system.file("data/summerland.st",package="seas")
-print(stfile)
-summ <- read.lars(stfile,year.offset=1960)
-head(summ)
-str(summ)
-
-# plot temperature
-summ$t_mean <- rowMeans(summ[,c("t_min","t_max")])
-plot.seas.temp(summ)
-
-# plot solar radiation
-plot.seas.var(summ,"solar")
-
-# plot precipitation
-summ.ss <- seas.sum(summ)
-image(summ.ss)
-plot(seas.norm(summ.ss))
-}
 \keyword{datasets}

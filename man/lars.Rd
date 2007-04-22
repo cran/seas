@@ -75,7 +75,7 @@ write.lars.scenario(file, x1, x2, name="anomaly")
   according to the following table:
 
   \tabular{ll}{
-    \emph{seas}   \tab \emph{LARS-WG} \cr
+    \emph{seas}  \tab \emph{LARS-WG} \cr
     \code{year}  \tab \sQuote{YEAR} \cr
     \code{yday}  \tab \sQuote{JDAY} \cr
     \code{t_min} \tab \sQuote{MIN} \cr
@@ -94,13 +94,17 @@ write.lars.scenario(file, x1, x2, name="anomaly")
   are gaps in \code{x$date}). Missing data values are written as
   \code{-99}.
 
+  Synthetically generated data from LARS-WG use a 365-day calendar, and
+  may need to be converted to a Gregorian calendar, which can be done
+  using \code{\link{conv365toGregorian}}.
+
   \code{lars2help} and \code{write.lars.scenario} are experimental
   functions to translate data between LARS and HELP (see
   \code{\link{write.help}} for more info).
 }
 \author{M.W. Toews}
 \references{
-  LARS-WG was can be downloaded for academic and research uses from
+  LARS-WG was can be downloaded for academic and research uses from \cr
   \url{http://www.rothamsted.bbsrc.ac.uk/mas-models/larswg.php}
 
   Semenov, M.A. and Barrow, E.M. (1997) \dQuote{Use of a stochastic
@@ -109,7 +113,8 @@ write.lars.scenario(file, x1, x2, name="anomaly")
   doi: 10.1023/A:1005342632279
 }
 \seealso{\code{\link{write.help}}, \code{\link{read.sdsm}},
-  \code{\link{summerland}} example synthetic data}
+  \code{\link{summerland}} example synthetic data,
+  \code{\link{conv365toGregorian}}}
 \examples{
 stfile <- system.file("data/summerland.st",package="seas")
 print(stfile)

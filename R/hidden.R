@@ -89,7 +89,7 @@ function(var,long.name=NULL,units=NULL){
       if(start > 1)
         start.yday <- round(sum(start.yday-1,
                                 days[1:(start-1)]))%%year.length+1
-      start.date <- as.Date(sprintf("2000-%03i",start.yday),"%Y-%j")
+      start.date <- as.Date(sprintf("2000-%03i",as.integer(start.yday)),"%Y-%j")
       sel.bin <- seq(start-1,start+num-2)%%num.bin+1
       bdf <- data.frame(pos=1:num,bin=sel.bin,width=days[sel.bin])
       bdf$yday <- cumsum(bdf$width)-bdf$width+start.yday

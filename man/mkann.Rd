@@ -6,14 +6,14 @@
   start of a season, and ends in the next year.
 }
 \synopsis{
-mkann(x, start.day, year.length)
+mkann(x, start.day, calendar)
 }
 \usage{
 # normal usage, where 'x' is a data.frame with a date column
 mkann(x)
 
 # all options
-mkann(x, start.day, year.length)
+mkann(x, start.day, calendar)
 
 }
 \arguments{
@@ -26,9 +26,9 @@ mkann(x, start.day, year.length)
     specified as either a \code{Date}, where year is ignored (e.g.,
     \code{as.Date("2000-08-01")} for August 1st of any year); or it can
     be a day of the year, from 1--365}
-  \item{year.length}{required if a non-Gregorian calendar is used, or
-    the attribute (using \code{\link{attr}}) is not set in \code{x} or
-    \code{x$date}}
+  \item{calendar}{if unspecified, it will be attempted to be read from
+    \code{attr(x$date}); otherwise it is assumed to be a normal
+    proleptic Gregorian calendar; see \code{\link{year.length}}}
 }
 \details{
   This date function finds the annual-breaks between seasons, using a
@@ -40,11 +40,8 @@ mkann(x, start.day, year.length)
   \code{start.day} in 1991, and ending in the day before
   \code{start.day} in 1992.
 
-  If a Gregorian calendar is used, the lengths of each annum are 365 or
-  366, depending where the leap year occurs, and also whether
-  \code{start.day} is before or after March 1st. For other calendars (such
-  as used by various numerical models), the annum length is same as the
-  \code{year.length}.
+  The length of each year depends on the calendar; see
+  \code{\link{year.length}} for details.
 
   A choice of \code{start.day} can influence annual totals using
   \code{\link{seas.sum}}, such as annual precipitation. For instance, if

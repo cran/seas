@@ -43,7 +43,7 @@
     ann$na <- tapply(x[,prime],x$ann,sum.is.num)
     for(p in var)
       ann[,p] <- tapply(x[,p],x$ann,sum,na.rm=TRUE)
-    td <- function(y) table(mkseas(width=width,year.length=y))
+    td <- function(y) table(mkseas(width=width,year=y,calendar=sc$calendar))
     days[,] <- t(sapply(ann$days,td))
     for(y in 1:length(years)) { # using integer indexes
       s <- x[x$ann==years[y],,drop=FALSE]

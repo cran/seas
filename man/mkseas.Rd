@@ -6,7 +6,7 @@
   for analysis, such as 11-day groups or by month.
 }
 \usage{
-mkseas(x, width = 11, start.day = 1, year.length, year)
+mkseas(x, width = 11, start.day = 1, calendar, year)
 }
 \arguments{
   \item{x}{A \code{data.frame} with a \code{date} column
@@ -16,23 +16,22 @@ mkseas(x, width = 11, start.day = 1, year.length, year)
     \code{year} to determine the leap year)
     
     If it is omitted, the full number of days will be calculated for the
-    year, determined by either \code{year} or \code{year.length}}
+    year, determined by either \code{year} or \code{calendar}}
   \item{width}{either \code{numeric} or other \code{character} value; if
     it is numeric, it specifies the number of days in each bin (default
     is 11 days); if character it specifies a common calendar usage, such as
     \code{"mon"} for months; see details below}
   \item{start.day}{this is the start of the season, specified as either a
     as a \code{Date} to specify a month and day (year is ignored; day of
-    month is ignored if \code{width} relates to a month), or as
-    a \code{\link{numeric}} day of year, between 1 and
-    \code{year.length} (which can change depending if it is after a leap
-    day)}
-  \item{year.length}{required if a non-Gregorian calendar is used, or
-    \code{x} is omitted, or the attribute is not set in
-    \code{x}; see details for more}
+    month is ignored if \code{width} relates to a month), or as a
+    \code{\link{numeric}} day of year, between 1 and the number of days
+    for the calendarter a leap day)}
+  \item{calendar}{used to determine the number of days per year and per
+    bin; if not specified, a proleptic Gregorian calendar is assumed;
+    see \code{\link{year.length}}}
   \item{year}{required if \code{x} is omitted, or if \code{x} is a
     Julian day integer and \code{width} is non-numeric; used to
-    calculate leap year; ignored if \code{year.length} is not 366}
+    calculate leap year}
 }
 \details{
   This useful date function groups \emph{days} of a year into discrete
@@ -83,22 +82,21 @@ mkseas(x, width = 11, start.day = 1, year.length, year)
     %\item \code{"zod.s"}: zodiac intervals (symbols; requires \R Unicode support)
   }
 
-  If a non-Gregorian calendar is used, the number of days in a year can
-  be set within the \code{Date} column using \code{\link{attr}} named
-  \code{year.length}. For example,
-  \code{attr(x$date,"year.length") <- 365} will set the dates using a
-  365-day per year calendar, where February is always 28-days in
-  length. If this attribute is not set, it is assumed a normal Gregorian
-  calendar is used, where there are as many as 366 days per
-  year. Calendars with 360-days per year (or 30-days per month) are
-  incorrectly handled, since February cannot have 30 days, however this
-  can be forced by including a duplicate February date in
-  \code{x} for each year).
+  If a non-Gregorian calendar is used (see \code{\link{year.length}}),
+  the number of days in a year can be set using \code{calendar}
+  attribute in the \code{date} column (using \code{\link{attr}}).
+  For example, \code{attr(x$date,"calendar") <- "365_day"} will set the
+  dates using a 365-day per year calendar, where February is always
+  28-days in length. If this attribute is not set, it is assumed a
+  normal Gregorian calendar is used. Calendars with 360-days per year
+  (or 30-days per month) are incorrectly handled, since February cannot
+  have 30 days, however this can be forced by including a duplicate
+  February date in \code{x} for each year).
 }
 \value{
   Returns an array of \code{\link{factor}}s for each date given in \code{x}.
   The factor also has four attributes: \code{width}, \code{start.day},
-  \code{year.length} (assumed to be 366, unless from attribute set in
+  \code{calendar} (assumed to be 366, unless from attribute set in
   \code{\link{Date}}), and an array \code{days} showing the maximum
   number of days in each bin.
   
@@ -167,7 +165,7 @@ barplot(table(mkseas(width=366/12, year=2005)),
 # Application using synthetic data
 dat <- data.frame(date=as.Date(paste(2005,1:365),"\%Y \%j"),
   value=(-cos(1:365*2*pi/365)*10+rnorm(365)*3+10))
-attr(dat$date,"year.length") <- 365
+attr(dat$date,"calendar") <- "365_day"
 
 dat$d5 <- mkseas(dat,5)
 dat$d11 <- mkseas(dat,11)

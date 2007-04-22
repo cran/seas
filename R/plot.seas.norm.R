@@ -73,7 +73,7 @@
       ylim <- c(0,ylim)
     }
     mar <- par("mar")
-    par(yaxs="i",xaxs="r")
+    par(yaxs="i",xaxs="r") # keep it this way
     if(add.alt){
       mar[4] <- mar[2]
       bty <- "u"

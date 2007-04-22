@@ -25,6 +25,9 @@ setSeasOpts()
 \value{
   \code{setSeasOpts()} only sets the \code{options} in the current
   environment, and returns nothing.
+
+  This is automatically done when \pkg{seas} is loaded (using
+  \code{\link{.First.lib}}).
 }
 \section{Options used in seas}{
   Here are all the supported options for \pkg{seas}, with the default

@@ -1,7 +1,5 @@
 "seas.df.check" <-
   function(x, orig, var=NULL){
-    if(is.null(getOption("seas.main")))
-      setSeasOpts()
     if(missing(orig))
       orig <- as.character(substitute(x))[[1]]
     if(!inherits(x,"data.frame"))
@@ -28,8 +26,11 @@
     if(is.null(sc$name))
       sc$name <- orig
     sc$year.range <- as.integer(format(range(x$date,na.rm=TRUE),"%Y"))
-    sc$year.length <- c(attr(x$date,"year.length"),
-                        attr(x,"year.length"),366)[1]
+    sc$calendar <- if("date" %in% names(x) && "calendar" %in% names(attributes(x$date)))
+      attr(x$date,"calendar")
+    else if("calendar" %in% names(attributes(x)))
+      attr(x,"calendar")
+    else NULL
     sc$main <- .seastitle(id=sc$id,name=sc$name,
                           orig=orig,range=sc$year.range)
     if(!is.null(var)) {
@@ -77,7 +78,7 @@
         if(!all(dim(norm) == dim(x$seas[1:2])))
           stop(gettextf("%s does not have the same dimensions as %s",
                         sQuote(norm),sQuote(sprintf("%s$days",orig))))
-        x$days <- normf
+        x$days <- norm
       } else if(inherits(norm,"array")) {
         if(!all(dim(norm) == dim(x$seas)))
           stop(gettextf("%s does not have the same dimensions as %s",

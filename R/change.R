@@ -1,7 +1,7 @@
 "change" <-
-  function(x1, x2, var, var1=var, var2=var, width="mon",
+  function(x1, x2, var1, var2=var1, width="mon",
            cent="mean",sprd="sd", disc=FALSE, inter=FALSE,
-           p.cut=0.3, start.day=1, year.length){
+           p.cut=0.3, start.day=1, calendar){
     orig1 <- as.character(substitute(x1))[[1]]
     sc1 <- seas.df.check(x1,orig1,var1)
     orig2 <- as.character(substitute(x2))[[1]]
@@ -10,11 +10,11 @@
       cent <- as.character(substitute(cent))[[1]]
     if (is.function(sprd))
       sprd <- as.character(substitute(sprd))[[1]]
-    if(missing(year.length))
-      year.length <- c(sc1$year.length,sc2$year.length)
-    else if(length(year.length) == 1)
-      year.length[2] <- year.length[1]
-    year.length <- c(year.length[1],year.length[2])
+    if(missing(calendar))
+      calendar <- c(sc1$calendar,sc2$calendar)
+    else if(length(calendar) == 1)
+      calendar[2] <- calendar[1]
+    calendar <- c(calendar[1],calendar[2])
     l <- list()
     l$orig <- list(orig1,orig2)
     l$var <- list(var1,var2)
@@ -29,8 +29,8 @@
     l$disc <- disc
     if(!disc) { # temperature, etc. ... generally normally distributed vars
                 # s1, s2: seasonal groups
-      x1$fact <- mkseas(x1,width,start.day,year.length[1])
-      x2$fact <- mkseas(x2,width,start.day,year.length[2])
+      x1$fact <- mkseas(x1,width,start.day,calendar[1])
+      x2$fact <- mkseas(x2,width,start.day,calendar[2])
       s1 <- split(x1[,var1],x1$fact)
       if(length(var1) > 1)
         s1 <- lapply(s1,unlist,recursive=FALSE,use.names=FALSE)

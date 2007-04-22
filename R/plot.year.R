@@ -21,7 +21,7 @@
       precip[,1] <- tapply(x$snow,x$ann,sum,na.rm=TRUE)
     }
     precip[,3] <- tapply(x$precip,x$ann,sum,na.rm=TRUE)
-    ndays <- attr(x$ann,"year.lengths")
+    ndays <- year.length(2000,attr(x$ann,"calendar"))
     sum.is.num <- function(d) return(sum(is.finite(d)))
     precip.na <- tapply(x$precip,x$ann,sum.is.num)
     temp.na <- tapply(x$t_mean,x$ann,sum.is.num)

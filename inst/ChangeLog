@@ -1,6 +1,21 @@
 This is a summary of changes to the 'seas' package for R.
 Please submit any suggestions or errors to me <mwtoews@sfu.ca>
 
+Version 0.3-5
+2007-04-22
+ - rewrote 'write.help' to use C-code for speed, also have load/unload
+    functions for the dynamic library
+ - added 'conv365toGregorian' function
+ - rearranged functions that used a 'year.length' attribute or parameter
+    to instead use a 'calendar' attribute or parameter
+ - added 'year.length' function to determine the number of days per year
+ - modified the behaviour of 'mksub' a bit, so it doesn't strip attributes
+    from arrays used in data frames; instead certain attributes are not
+    transfered
+ - casting integers for 'sprintf' calls for significant speed gains, in
+    particular in 'read.lars'
+ - simplified 'change' by removing the first 'var' parameter
+
 Version 0.3-4
 2007-04-02
  - fixed minor error with named attributes for R 2.5.0

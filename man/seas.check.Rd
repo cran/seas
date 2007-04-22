@@ -49,8 +49,8 @@ seas.sum.check(x, orig, var, norm, year.filter, ann.only)
       \code{x$id[1]}}
     \item{\code{name}:}{name of seasonal data, such as a place}
     \item{\code{year.range}:}{integers of start, and ending years}
-    \item{\code{year.length}:}{an attribute from \code{x$date},
-      \code{x}; otherwise this will be \code{366} for a normal
+    \item{\code{calendar}:}{an attribute from \code{x$date};
+      otherwise this will be \code{NULL} for a normal proleptic
       Gregorian calendar}
     \item{\code{main}:}{main title, from \code{\link{.seastitle}}}
     \item{\code{units}:}{units for \code{var[1]}}

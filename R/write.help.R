@@ -1,58 +1,42 @@
 "write.help" <-
-  function(file = "", dat, var, name, region, lat, visual.help=FALSE, metric=TRUE) {
+  function(file, dat, var, name="", region="", lat, visual.help=FALSE, metric=TRUE) {
     if(!var %in% c("t_mean","precip","solar"))
       stop(gettextf("%s must be one of %s, %s or %s for daily mean temperature, precipitation and global solar radiation",
                     sQuote("var"),sQuote("t_mean"),sQuote("precip"),sQuote("solar")))
-    if(file == ""){
-      con <- stdout()
-    } else {
-      con <- file(file,"w")
-      on.exit(close(con))
+    orig <- as.character(substitute(dat))[[1]]
+    sc <- seas.df.check(dat,orig,var)
+    header <- formatC(c(3,ifelse(metric,2,1),NA,NA),0,2)
+    header[3] <- sprintf("%-20s %-20s",name,region)
+    if(var == "solar"){
+      header[4] <- sprintf("%9.2f",lat)
+      type <- 5
     }
-    writeLines(formatC(c(3,ifelse(metric,2,1)),0,2),con) # write data entered (9) and metric flags (2)
-    writeLines(sprintf("%-20s %-20s",name,region),con)
-    if(var == "solar")
-      writeLines(sprintf("%9.2f",lat),con)
     if(var %in% c("precip","t_mean")) {
       if(var == "precip") {
-        seas.nm <- seas.norm(seas.sum(dat,var="precip",width="mon"))$seas
+        seas.nm <- seas.norm(seas.sum(dat,var="precip",width="mon"),fun=mean)$seas
         nm <- seas.nm$precip * seas.nm$days # in mm/month
-      } else
-      nm <- tapply(dat$t_mean,mkseas(dat,width="mon"),mean,na.rm=TRUE)
+        type <- 1
+      } else { # t_mean
+        nm <- tapply(dat$t_mean,mkseas(dat,width="mon"),mean,na.rm=TRUE)
+        type <- 3
+      }
       if(visual.help) dw <- 9
       else dw <- 6
-      cat(formatC(nm,1,dw,"f"),sep="",file=con)
-      writeLines("",con)
+      header[4] <- paste(formatC(nm,1,dw,"f"),collapse="")
     }
-    dat$fact <- mkseas(dat,width=10)
-    years <- range(dat$year)
-    start <- years[1]
-    end <- years[2]
-    yf <- "%5i"
-    dw <- 9
-    ds <- 1
-    if(var == "precip") { # make it identical to Visual HELP format
-      yf <- "%10i"
-      dw <- 8
-    }
-    if(!visual.help) {
-      dw <- 6
-      if (var == "precip") {
-        ds <- 2
-        dw <- 5
-      } else if(var == "solar") {
-        ds <- 2
-      }
-    }
-    for(year in start:end) {
-      for(sl in 1:37) {
-        cat(sprintf(yf,year),file=con)
-        ln <- dat[dat$year==year&dat$fact==sl,var]
-        if((sl != 37 && length(ln) != 10) || (sl == 37 & length(ln) < 5))
-          warning(paste("Incomplete data: year=",year,"i=",i,"slice=",sl))
-        if(sl == 37) ln <- c(ln,rep(0,10-length(ln)))
-        cat(formatC(ln,ds,dw,"f"),sep="",file=con)
-        writeLines(sprintf(yf,sl),con)
-      }
-    }
+    header <- paste(header,collapse="\n")
+    if(visual.help)
+      type <- type+1
+    yearrange <- range(dat$year)
+    years <- seq(yearrange[1],yearrange[2],by=1)
+    days <- rep(365,length(years))
+    days[years%%4==0&years%%100!=0|years%%400==0] <- 366
+    val <- dat[[var]]
+    if(sum(days) != length(val))
+      stop("Number of values should correspond to the number of possible days between whole years")
+    if(any(!is.finite(val)))
+      stop("Missing values are not allowed")
+    invisible(.C("writeHELP",file,header,as.integer(type),
+                 as.integer(yearrange[1]),as.integer(diff(yearrange)+1),
+                 as.double(val),PACKAGE="seas"))
   }

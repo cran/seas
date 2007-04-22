@@ -1,47 +1,40 @@
 "mkseas" <-
-  function (x, width=11, start.day=1, year.length, year) {
-    if(missing(year.length)||is.null(year.length)) {
-      year.length <- 366 # Gregorian calendar
-      missing.yl <- TRUE
-    } else {
-      missing.yl <- FALSE
-      year.length <- ceiling(year.length) # make sure not 365.25
-    }
+  function (x, width=11, start.day=1, calendar, year) {
+    if(missing(calendar)){
+      missing.calendar <- TRUE
+      calendar <- NULL
+    } else missing.calendar <- FALSE
     if(missing(x)) {
       missing.x <- TRUE
-      if (year.length == 366) {
-        if(missing(year)){
-          if(!missing.yl)
-            year <- 2000 # leap year
-          else
-            stop(gettextf("either %s or a %s is needed to determine if this is a leap year",
-                          sQuote("year.length"),sQuote("year")))
-        }
-        missing.yl <- FALSE
-        year.length <- 365 + (ifelse(year%%4==0&year%%100!=0,1,0)+
-                              ifelse(year%%400 == 0,1,0))
-      } else { # non-Gregorian
-        year <- 2001 # arbitrary
-      }
+      if (is.null(calendar) || calendar=="julian") { # have leap years
+        if(missing(year))
+          stop("a 'year' is needed to determine if this is a leap year")
+        year.length <- year.length(year[1],calendar)
+      } else year.length <- year.length(1,calendar)
       x <- 1:year.length
-    }else missing.x <- FALSE
-    orig <- as.character(substitute(x))[[1]]
-    if(missing.yl)
-      year.length <- c(attr(date,"year.length"),attr(x,"year.length"))[[1]]
-    year.length <- if(is.null(year.length))
-      366 # Gregorian calendar
-    else
-      ceiling(year.length)
+      orig <- "x"
+    } else {
+      missing.x <- FALSE
+      orig <- as.character(substitute(x))[[1]]
+      if(missing.calendar){
+        if("date" %in% names(x) && "calendar" %in% names(attributes(x$date)))
+          calendar <- attr(x$date,"calendar")
+        else if("calendar" %in% names(attributes(x)))
+          calendar <- attr(x,"calendar")
+      }
+      year.length <- year.length(2000,calendar)
+    }
     if(inherits(start.day,c("POSIXct","Date"))){
       start.month <- as.integer(format(start.day,"%m"))
       start.std <- as.Date(format(start.day,"2000-%m-%d"))
       start.yday <- as.integer(format(start.std,"%j"))
     }else{ # assumed integer
+      start.day <- as.integer(start.day)
       if(start.day < 1 || start.day >= year.length)
         stop(gettextf("%s must >= 1 or < %s",
                       sQuote("start.day"),sQuote("year.length")))
       start.yday <- start.day
-      start.std <- as.Date(sprintf("2000-%i",start.yday),"%Y-%j")
+      start.std <- as.Date(sprintf("2000-%i",as.integer(start.yday)),"%Y-%j")
       start.month <- as.integer(format(start.std,"%m"))
     }
     if(inherits(x,c("POSIXct","Date"))) { # find the date
@@ -63,7 +56,7 @@
         }
       }
     }else if(inherits(x,c("numeric","integer"))) { # assumed to be yday
-      date <- as.Date(sprintf("%04i-%03i",year,x),"%Y-%j")
+      date <- as.Date(sprintf("%04i-%03i",as.integer(year),as.integer(x)),"%Y-%j")
     }else{
       stop(gettextf("could not find %s in %s",
                     sQuote("date"),sQuote(orig)))
@@ -72,9 +65,9 @@
       if(year.length %in% c(365,366)) {
         days <- c(31,29,31,30,31,30,31,31,30,31,30,31) # 366 days per year
         if(year.length == 365)
-          days[2] <- 28 # 365-day non-Gregorian calendar
+          days[2] <- 28 # 365-day calendar
       }else{
-        days <- rep(year.length/12,12) # might be non-integer!
+        days <- rep(year.length/12,12)
       }
       if(width == "mon") { # short month name from locale
         levels <- months(as.Date(paste(2000,1:12,1,sep="-")),TRUE)
@@ -103,6 +96,7 @@
         bins <- levels[floor(((as.integer(format(date,"%m"))-1)%%12)/3)+1]
         start.bin <- floor((start.month-1)%%12/3)+1
       } else if(width %in% c("zod","zodiac")) {
+        calendar <- NA # Gregorian
         days <- c(30,31,32,31,31,31,30,30,30,29,30,31)
         levels <- c("Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra",
                     "Scorpio","Sagittarius","Capricorn","Aquarius","Pisces")
@@ -123,19 +117,20 @@
     }else if(is.numeric(width)) { # n-day bins
       yday <- as.integer(format(date,"%j"))
       yday[yday > year.length] <- year.length # trim anything bigger
-      ld <- if(year.length==366) # leap-day; either -1 or 0
-        function(y)(ifelse(y%%4==0&y%%100!=0,0,-1)+
-                    ifelse(y%%400 == 0, 1, 0))
+      ld <- if(is.null(calendar)) # Gregorian
+        function(y)(ifelse(y%%4==0&y%%100!=0|y%%400==0,0,-1))
+      else if(calendar == "julian")
+        function(y)(ifelse(y%%4==0,0,-1))
       else
-        function(y)(integer(y))
-      if(!is.null(x$date)) {
-        if(is.null(x$year))
+        function(y)(0)
+      if(inherits(x,"data.frame") && "date" %in% names(x)) {
+        if(!"year" %in% names(x))
           x$year <- as.integer(format(x$date,"%Y"))
         lds <- ld(x$year)
       }else{
         lds <- integer(year.length)
       }
-      if(year.length==366 && inherits(start.day,c("POSIXct","Date"))){
+      if(any(lds!=0) && inherits(start.day,c("POSIXct","Date"))){
         if(start.yday>60){ # before or after March 1
           yday <- yday-start.yday-lds
         }else{
@@ -159,7 +154,7 @@
     bins <- factor(bins,levels)
     attr(bins,"width") <- width
     attr(bins,"start.day") <- start.day
-    attr(bins,"year.length") <- year.length
+    attr(bins,"calendar") <- calendar
     attr(bins,"bin.lengths") <- days
     bins
   }

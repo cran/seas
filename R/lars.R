@@ -1,6 +1,6 @@
 "read.lars" <-
   function(stfile,year.offset=0) {
-    conv <- data.frame(lars=I(c("year","jday","rad",  "min",  "max",  "rain",  "sun")),
+    conv <- data.frame(lars=I(c("year","jday","rad",   "min",   "max",  "rain","sun")),
                        seas=I(c("year","yday","solar","t_min","t_max","precip","sun")))
     if(is.character(stfile)) {
       ext <- unlist(strsplit(stfile,"\\."))
@@ -24,11 +24,13 @@
     m <- m[!is.na(m$m),]
     format[m$i] <- conv$seas[m$m]
     x <- read.table(datfile,col.names=format,na.strings="-99")
-    x$year <- x$year+year.offset
-    if("month" %in% names(x) && !"yday" %in% names(x))
-      x$date <- as.Date(sprintf("%04i-%02i-%02i",x$year,x$month,x$day))
+    x$year <- as.integer(x$year+year.offset)
+    x$date <- if("month" %in% names(x) && !"yday" %in% names(x))
+      with(x,as.Date(sprintf("%04i-%02i-%02i",as.integer(year),
+                             as.integer(month),as.integer(day))))
     else
-      x$date <- as.Date(sprintf("%04i-%03i",x$year,x$yday),"%Y-%j")
+      with(x,as.Date(sprintf("%04i-%03i",as.integer(year),as.integer(yday)),
+                     "%Y-%j"))
     deg <- iconv("\260","latin1","")
     deg <- if (is.na(deg)) "deg" else deg
     degC <- paste(deg,"C",sep="")
@@ -142,16 +144,17 @@
 
 "write.lars.scenario" <-
   function(file,x1,x2,name="anomaly") {
-    t_max <- seas.change(x1,x2,"t_max")
-    t_min <- seas.change(x1,x2,"t_min")
+    t_max <- change(x1,x2,"t_max")
+    t_min <- change(x1,x2,"t_min")
     if(!"t_mean" %in% names(x1))
-      x1$t_mean <- apply(x1[,c("t_min","t_max")],1,mean,na.rm=T)
+      x1$t_mean <- apply(x1[,c("t_min","t_max")],1,mean,na.rm=TRUE)
     if(!"t_mean" %in% names(x2))
-      x2$t_mean <- apply(x2[,c("t_min","t_max")],1,mean,na.rm=T)
-    t_mean <- seas.change(x1,x2,"t_mean")
-    precip <- seas.change(x1,x2,"precip",disc=TRUE)
-    solar <- seas.change(x1,x2,"solar")
-    tb <- data.frame(row.names=month.abb,rain=rep(1,12),wet=1,dry=1,min=0,max=0,tsd=1,rad=1)
+      x2$t_mean <- apply(x2[,c("t_min","t_max")],1,mean,na.rm=TRUE)
+    t_mean <- change(x1,x2,"t_mean")
+    precip <- change(x1,x2,"precip",disc=TRUE,inter=TRUE)
+    solar <- change(x1,x2,"solar")
+    tb <- data.frame(row.names=month.abb,rain=rep(1,12),
+                     wet=1,dry=1,min=0,max=0,tsd=1,rad=1)
     tb$rain <- precip$cent.rel[,"precip"]
     tb$wet <- precip$wet.rel
     tb$dry <- precip$dry.rel
@@ -174,7 +177,6 @@
 
 "lars2help" <-
   function(infile,outfile,year.offset,site){
-    require(seas)
     
     fp <- file(infile,"r")
     l <- readLines(fp)
