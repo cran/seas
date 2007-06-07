@@ -1,6 +1,8 @@
 "mkseas" <-
   function (x, width=11, start.day=1, calendar, year) {
-    if(missing(calendar)){
+    if(missing(start.day)||is.null(start.day))
+      start.day <- 1
+    if(missing(calendar)||is.null(calendar)){
       missing.calendar <- TRUE
       calendar <- NULL
     } else missing.calendar <- FALSE

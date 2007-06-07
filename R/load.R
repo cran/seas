@@ -1,5 +1,5 @@
-".First.lib" <- function(lib, pkg) {
-  library.dynam("seas", pkg, lib)
+".First.lib" <- function(libname, pkgname) {
+  library.dynam("seas", pkgname, libname)
   setSeasOpts()
 }
 ".Last.lib" <- function(libpath){

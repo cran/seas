@@ -63,6 +63,8 @@ setSeasOpts()
 	    \sQuote{Aug 1} for \emph{August 1st}}
 	  \item{\code{month}}{similar as previous, but when starting
 	    exactly on month-breaks; \code{"\%B"}}
+	  \item{\code{ann}}{a label for \code{\link{image.seas.sum}};
+	    default is \sQuote{annual}}
 	}
       }
       \item{\code{seas.month.grid}:}{setting for the display of the

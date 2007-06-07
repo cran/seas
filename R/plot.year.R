@@ -47,7 +47,7 @@
       sc.precip$units <- "mm"
     if(is.null(sc.precip$long.name))
       sc.precip$long.name <- "precipitation"
-    sc.precip$units <- gettextf("%s/day",sc.precip$units)
+    sc.precip$units <- gettextf("%s/year",sc.precip$units)
     sc.precip$ylab <- .seasylab(orig,sc.precip$long.name,sc.precip$units)
     ylab1 <- sc.precip$ylab
     if(precip.only) {

@@ -21,9 +21,9 @@
       stop(gettextf("could not find %s in %s",
                     sQuote("date"),sQuote(orig)))
     }
-    if(missing(start.day))
+    if(missing(start.day)||is.null(start.day))
       start.day <- c(attr(x,"start.day"),1)[[1]]
-    if(missing(calendar)){
+    if(missing(calendar)||is.null(calendar)){
       calendar <- if("date" %in% names(x) && "calendar" %in% names(attributes(x$date)))
         attr(x$date,"calendar")
       else if("calendar" %in% names(attributes(x)))

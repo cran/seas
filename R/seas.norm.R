@@ -1,3 +1,34 @@
+#"seas.norm" <-
+function(x, var, width, cent="mean", sprd="sd", start.day, calendar){
+  orig <- as.character(substitute(x))[[1]]
+  sc <- seas.df.check(x,orig,var)
+  l <- list()
+  l$orig <- orig
+  l$var <- var
+  l$id <- sc$id
+  l$name <- sc$name
+  l$year.range <- sc$name
+  l$long.name <- sc$long.name
+  l$units <- sc$units
+  l$width <- width
+  if(missing(calendar))
+    l$calendar <- sc$calendar
+  if(missing(start.day))
+    l$start.day <- sc$start.day
+  if(is.function(cent))
+    cent <- as.character(substitute(cent))[[1]]
+  if(is.function(sprd))
+    sprd <- as.character(substitute(sprd))[[1]]
+  l$cent.fun <- cent
+  l$sprd.fun <- sprd
+  x$fact <- mkseas(x, width, l$start.day, l$calendar)
+    s <- split(x[, var], x$fact)
+  if (length(var) > 1)
+    s1 <- lapply(s, unlist, recursive = FALSE, use.names = FALSE)
+  l$cent <- eval(call("sapply",s,cent,na.rm=TRUE))
+  l$sprd <- eval(call("sapply",s,sprd,na.rm=TRUE))
+  l
+}
 "seas.norm" <-
   function(x, var, fun="median", norm="days", year.filter,
            ann.only=FALSE, precip.norm=FALSE) {

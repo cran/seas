@@ -27,7 +27,7 @@
     header <- paste(header,collapse="\n")
     if(visual.help)
       type <- type+1
-    yearrange <- range(dat$year)
+    yearrange <- range(as.integer(format(dat$year,"%Y")))
     years <- seq(yearrange[1],yearrange[2],by=1)
     days <- rep(365,length(years))
     days[years%%4==0&years%%100!=0|years%%400==0] <- 366

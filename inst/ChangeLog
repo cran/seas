@@ -1,6 +1,15 @@
 This is a summary of changes to the 'seas' package for R.
 Please submit any suggestions or errors to me <mwtoews@sfu.ca>
 
+Version 0.3-6
+2007-06-07
+ - added an 'ann' option in 'seas.label' for 'image.seas.sum'
+ - modified 'conv365toGregorian' to copy attributes from 'x' into ouput
+ - fixed precipitation unit in 'plot.year'
+ - 'seas.df.check' now looks for 'start.day'
+ - 'write.help' now calculates 'year' to 'dat'
+ - updated citation; paper now published
+
 Version 0.3-5
 2007-04-22
  - rewrote 'write.help' to use C-code for speed, also have load/unload

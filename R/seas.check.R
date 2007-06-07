@@ -26,10 +26,17 @@
     if(is.null(sc$name))
       sc$name <- orig
     sc$year.range <- as.integer(format(range(x$date,na.rm=TRUE),"%Y"))
-    sc$calendar <- if("date" %in% names(x) && "calendar" %in% names(attributes(x$date)))
+    sc$calendar <- if("date" %in% names(x) &&
+                      "calendar" %in% names(attributes(x$date)))
       attr(x$date,"calendar")
     else if("calendar" %in% names(attributes(x)))
       attr(x,"calendar")
+    else NULL
+    sc$start.day <- if("date" %in% names(x) &&
+                       "start.day" %in% names(attributes(x$date)))
+      attr(x$date,"start.day")
+    else if("start.day" %in% names(attributes(x)))
+      attr(x,"start.day")
     else NULL
     sc$main <- .seastitle(id=sc$id,name=sc$name,
                           orig=orig,range=sc$year.range)

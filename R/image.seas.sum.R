@@ -164,7 +164,7 @@
              lwd=c(op.mean$lwd,op.median$lwd)*lwd,
              lty=c(op.mean$lty,op.median$lty))
       axis(1,labels=FALSE,lwd=lwd)
-      mtext(.seasylab(orig,gettextf("annual"),x$units[[var]]),
+      mtext(.seasylab(orig,getOption("seas.label")$ann,x$units[[var]]),
             1,line=par("mgp")[2],cex=par("cex.axis")*.8)
       par(mar=mar5,bg="white")
       sam.qp <- seq(0,100,length.out=length(ann.at))
