@@ -78,7 +78,7 @@ function(x, var, width, cent="mean", sprd="sd", start.day, calendar){
       ann$active <- NULL
     }
     if(!ann.only) {
-      # .b suffix is a matrix of sums of bin for each year
+      ## .b suffix is a matrix of sums of bin for each year
       var.b <- x$seas[,,var] # drop=TRUE is default
       norm.b <- x$norm[,,var]
       var.n <- x$seas/x$norm # normalized
@@ -108,9 +108,9 @@ function(x, var, width, cent="mean", sprd="sd", start.day, calendar){
       }else if(fun == "median" && n.years > 2) {
         quan <- data.frame(var=NA)
         secant <- function (f) {
-        # Secant method to find a root; f is a function which needs to
-        # be zero, specifically a quantile in [0,1]
-        # Cheny, E. W. and Kincaid, D. 1999
+          ## Secant method to find a root; f is a function which needs to
+          ## be zero, specifically a quantile in [0,1]
+          ## Cheny, E. W. and Kincaid, D. 1999
           a <- 0.45; b <- 0.55 # start around the 50% quantile or true median
           fa <- f(a); fb <- f(b)
           while (fa == fb && b < 1) # if there is no slope around initial guess
@@ -143,8 +143,8 @@ function(x, var, width, cent="mean", sprd="sd", start.day, calendar){
                             na.rm=TRUE,names=FALSE)
         if(precip.norm) {
           quan$snow <- quan$rain <- NA
-          # calculate the quantile of annual rain + snow, which equals
-          # the anual precipitation
+          ## calculate the quantile of annual rain + snow, which equals
+          ## the anual precipitation
           quan$rainsnow <- secant(function(qu)
                                   return(ann$var
                                          - quantile(rain.a,qu,
@@ -155,8 +155,8 @@ function(x, var, width, cent="mean", sprd="sd", start.day, calendar){
                                                     names=FALSE)))
           rain.am <- quantile(ann$rain,quan$rainsnow,
                               na.rm=TRUE,names=FALSE)
-          # calculate the quantile of all rain data in the bins to
-          # equal the annual rain volume
+          ## calculate the quantile of all rain data in the bins to
+          ## equal the annual rain volume
           quan$rain <- secant(function(qu)
                               return(rain.am - sum(apply(rain.b,2,
                                                          quantile,qu,
@@ -177,14 +177,14 @@ function(x, var, width, cent="mean", sprd="sd", start.day, calendar){
                                quan$snow,
                                na.rm=TRUE,names=FALSE)
           } else seas$snow <- seas$rain*0
-          # calculate the fraction of rain
+          ## calculate the fraction of rain
           rs.f <- with(seas,rain/(rain+snow))
           if(any(is.nan(rs.f)))
             rs.f[seas$rain+seas$snow==0] <- 1 # avoid divide by zero
           seas$rain <- seas$var * rs.f
           seas$snow <- seas$var * (1 - rs.f)
-          # these two operations make the bars equal for
-          # precip.norm=TRUE and FALSE
+          ## these two operations make the bars equal for
+          ## precip.norm=TRUE and FALSE
         }
         if(x$a.cut && ann$active > 0) {
           quan$active <- secant(function(qu)

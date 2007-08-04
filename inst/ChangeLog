@@ -1,5 +1,12 @@
 This is a summary of changes to the 'seas' package for R.
-Please submit any suggestions or errors to me <mwtoews@sfu.ca>
+Please submit any suggestions, additions, or errors to:
+	Mike Toews <mwtoews@gmail.com>
+
+Version 0.3-7
+2007-08-04
+ - change email, since older SFU account will expire eventually
+ - using original items for 'par("yaxt")' in 'plot.seas.var'
+ - fixed bug in 'write.help.R'
 
 Version 0.3-6
 2007-06-07

@@ -1,10 +1,10 @@
 Package: seas
 Type: Package
-Version: 0.3-6
-Date: 2007-06-07
+Version: 0.3-7
+Date: 2007-08-04
 Title: Seasonal analysis and graphics, especially for climatology
 Author: M.W. Toews
-Maintainer: M.W. Toews <mwtoews@sfu.ca>
+Maintainer: M.W. Toews <mwtoews@gmail.com>
 Suggests: MASS
 ZipData: no
 Description: Capable of deriving seasonal statistics, such as "normals", and
@@ -17,4 +17,4 @@ Description: Capable of deriving seasonal statistics, such as "normals", and
   time-varying parameter with a discernible seasonal signal, such as found in
   hydrology and ecology.
 License: BSD
-Packaged: Thu Jun  7 06:06:12 2007; mwtoews
+Packaged: Wed Aug  8 08:22:06 2007; mwtoews
