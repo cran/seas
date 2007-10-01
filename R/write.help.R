@@ -15,7 +15,10 @@
     header <- formatC(c(3, ifelse(metric, 2, 1), NA, NA), 0, 2)
     header[3] <- sprintf("%-20s %-20s", name, region)
     if(var == "solar"){ # solar files require latitude
-      header[4] <- sprintf("%9.2f", lat)
+      header[4] <- if(visual.help)
+        sprintf("%6.2f", lat)
+      else
+        sprintf("%9.2f", lat)
       type <- 5
     }else if(var %in% c("precip", "t_mean")) { # these file require normals
       if(var == "precip") {
@@ -27,9 +30,7 @@
         nm <- tapply(dat$t_mean, mkseas(dat, width="mon"), mean,na.rm=TRUE)
         type <- 3
       }
-      if(visual.help) dw <- 9
-      else dw <- 6
-      header[4] <- paste(formatC(nm, 1, dw, "f"), collapse="")
+      header[4] <- paste(sprintf("%6.1f", nm), collapse="")
     }
     header <- paste(header, collapse="\n")
     if(visual.help)

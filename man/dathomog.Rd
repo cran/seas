@@ -52,8 +52,9 @@ plot.year(dat1)
 plot.year(dat2)
 newdata <- dathomog(dat1,dat2)
 plot.year(newdata)
-message("This is a rather poor example, since the two stations are")
-message("nowhere near each other")
+message(paste(c("This is a rather poor example, since the",
+                "two stations are nowhere near each other"),
+                collapse="\n"))
 }
 \keyword{utilities}
 \keyword{datagen}

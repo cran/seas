@@ -1,6 +1,11 @@
 This is a summary of changes to the 'seas' package for R.
 Please submit any suggestions, additions, or errors to:
 	Mike Toews <mwtoews@gmail.com>
+Version 0.3-8
+2007-10-01
+ - fix bug with write.help for Visual HELP precipitation file
+ - fix partial matching errors in 'dathomog', identified by BDR
+ - other documentation fixes identified using 2.7.0 devel series
 
 Version 0.3-7
 2007-08-04

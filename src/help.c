@@ -1,5 +1,5 @@
-/* Included with seas package for R       */
-/* (c) Michael W. Toews 2007  BSD-license */
+/* Included with seas package for R
+ * (c) Michael W. Toews 2007  BSD-license */
 
 #include<stdio.h>
 #include<stdlib.h>
@@ -17,8 +17,8 @@ void writeHELP(char **filename, char **header, int *type, int *startyear,
     fv = "%5.2f";
     break;
   case 2: // precipitation Visual HELP
-    fy = "%5i";
-    fv = "%8.1i";
+    fy = "%10i";
+    fv = "%6.1f";
     break;
   case 3: // temperature
     fy = "%5i";
@@ -26,7 +26,7 @@ void writeHELP(char **filename, char **header, int *type, int *startyear,
     break;
   case 4: // temperature Visual HELP
     fy = "%5i";
-    fv = "%9.1f";
+    fv = "%6.1f";
     break;
   case 5: // solar
     fy = "%5i";
@@ -34,7 +34,7 @@ void writeHELP(char **filename, char **header, int *type, int *startyear,
     break;
   case 6: // solar Visual HELP
     fy = "%5i";
-    fv = "%9.1f";
+    fv = "%9.2f";
     break;
   default:
     printf("Unknown type!");

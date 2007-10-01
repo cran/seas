@@ -73,7 +73,7 @@
     dat[,vars] <- dat.x
     for(v in names(dat)) {
       dat.na <- is.na(dat[[v]])
-      dat[[v]][dat.na] <- dat.y[[v]][dat.na]
+      dat[[v]][dat.na] <- dat.y[[paste(v,".y",sep="")]][dat.na]
     }
     for(n in names(dat))
       attributes(dat[[n]]) <- a[[n]]

@@ -68,7 +68,6 @@
   use \code{write.csv(dat,"out.csv")}; MS Excel users may want to turn
   \code{NA} values into the format recognized by Excel, so modify the
   expression to \code{write.csv(dat,"out.csv",na="#N/A")}.
-  }
 }
 \source{
   Data provided by the Meteorological Service of Canada

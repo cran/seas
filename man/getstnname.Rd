@@ -2,7 +2,7 @@
 \alias{getstnname}
 \title{Get station name}
 \description{
-  Retrieves the full name from \code{\link{mscstn}} using an ID}
+  Retrieves the full name from \code{\link{mscstn}} using an ID
 }
 \usage{
 getstnname(id)
