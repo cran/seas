@@ -1,6 +1,10 @@
 This is a summary of changes to the 'seas' package for R.
 Please submit any suggestions, additions, or errors to:
 	Mike Toews <mwtoews@gmail.com>
+Version 0.3-9
+2010-05-07
+ - update documentation and examples for R 2.11
+
 Version 0.3-8
 2007-10-01
  - fix bug with write.help for Visual HELP precipitation file

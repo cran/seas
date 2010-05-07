@@ -38,9 +38,9 @@ year.length(x, calendar)
 cal <- data.frame(year=c(1899,1900,1904,2000,2080,2100))
 cal[["Gregorian"]] <- year.length(cal$year)
 cal[["Julian"]] <- year.length(cal$year,"julian")
-cal[["360\_day"]] <- year.length(cal$year,"360\_day")
-cal[["365\_day"]] <- year.length(cal$year,"365\_day")
-cal[["366\_day"]] <- year.length(cal$year,"366\_day")
+cal[["360_day"]] <- year.length(cal$year,"360_day")
+cal[["365_day"]] <- year.length(cal$year,"365_day")
+cal[["366_day"]] <- year.length(cal$year,"366_day")
 
 cal
 }

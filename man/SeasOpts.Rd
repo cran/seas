@@ -50,40 +50,40 @@ setSeasOpts()
 	\item{\code{show.fun}:}{show function (where applicable) in
 	  main title; \code{TRUE}}
       }
-      \item{\code{seas.label}:}{label formating for variables:
-	\describe{
-	  \item{\code{fmt}:}{label for name and units (if available);
-	    \code{"\%s (\%s)"}, other alternatives could be
-	    \code{"\%s, \%s"}}
-	  \item{\code{monthday}:}{format for month and day (see
-	    \code{\link{strftime}} for format codes); this can be either
-	    \code{"\%b \%-d"} (for most Unix-like systems),
-	    \code{"\%b \%#d"} (for Windows systems), or \code{"\%b \%d"}
-	    (for other systems); this should produce a string, such as
-	    \sQuote{Aug 1} for \emph{August 1st}}
-	  \item{\code{month}}{similar as previous, but when starting
-	    exactly on month-breaks; \code{"\%B"}}
-	  \item{\code{ann}}{a label for \code{\link{image.seas.sum}};
-	    default is \sQuote{annual}}
+    }
+    \item{\code{seas.label}:}{label formating for variables:
+      \describe{
+	\item{\code{fmt}:}{label for name and units (if available);
+	  \code{"\%s (\%s)"}, other alternatives could be
+	  \code{"\%s, \%s"}}
+	\item{\code{monthday}:}{format for month and day (see
+	  \code{\link{strftime}} for format codes); this can be either
+	  \code{"\%b \%-d"} (for most Unix-like systems),
+	  \code{"\%b \%#d"} (for Windows systems), or \code{"\%b \%d"}
+	  (for other systems); this should produce a string, such as
+	  \sQuote{Aug 1} for \emph{August 1st}}
+	\item{\code{month}}{similar as previous, but when starting
+	  exactly on month-breaks; \code{"\%B"}}
+	\item{\code{ann}}{a label for \code{\link{image.seas.sum}};
+	  default is \sQuote{annual}}
 	}
-      }
-      \item{\code{seas.month.grid}:}{setting for the display of the
-	month grid (see \code{\link{.seasmonthgrid}}), which is common to
-	many plots that use a \code{\link{numeric}} \code{width} in
-	\code{\link{mkseas}}:
-	\describe{
-	  \item{\code{abb}:}{abbreviate month names for grid; \code{TRUE}}
-	  \item{\code{len}:}{trim month name lengths to a number, for
-	    instance to get J|F|M|A|M|J|J|A|S|O|N|D, use \code{1}; \code{NULL}}
-	  \item{\code{force}:}{force the display of each month label using
-	    \code{\link{mtext}}, otherwise labels can be automatically placed
-	    and adjusted for device using \code{\link{axis}}; \code{TRUE}}
-	  \item{\code{label}:}{show a month label on the grid; \code{TRUE}}
-	  \item{\code{col}:}{colour for month grid; \code{"lightgrey"}}
-	  \item{\code{lwd}:}{width for month grid lines, multiplied by
-	    \code{par("lwd")}; \code{1}}
-	  \item{\code{lty}:}{style for month grid lines; \code{1}}
-	}
+    }
+    \item{\code{seas.month.grid}:}{setting for the display of the
+      month grid (see \code{\link{.seasmonthgrid}}), which is common to
+      many plots that use a \code{\link{numeric}} \code{width} in
+      \code{\link{mkseas}}:
+      \describe{
+	\item{\code{abb}:}{abbreviate month names for grid; \code{TRUE}}
+	\item{\code{len}:}{trim month name lengths to a number, for
+	  instance to get J|F|M|A|M|J|J|A|S|O|N|D, use \code{1}; \code{NULL}}
+	\item{\code{force}:}{force the display of each month label using
+	  \code{\link{mtext}}, otherwise labels can be automatically placed
+	  and adjusted for device using \code{\link{axis}}; \code{TRUE}}
+	\item{\code{label}:}{show a month label on the grid; \code{TRUE}}
+	\item{\code{col}:}{colour for month grid; \code{"lightgrey"}}
+	\item{\code{lwd}:}{width for month grid lines, multiplied by
+	  \code{par("lwd")}; \code{1}}
+	\item{\code{lty}:}{style for month grid lines; \code{1}}
       }
     }
     \item{\code{seas.bxp}:}{attributes which affect the display of

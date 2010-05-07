@@ -10,7 +10,7 @@
 %\usage{data(mscdata)}
 \format{
   Both files are ASCII-based, and can be viewed in any text editor
-  \description{
+  \itemize{
     \item \file{summerland.sr} is the \sQuote{site file}, which contains
     the meta-data
     \item \file{summerland.dat} is the data file
