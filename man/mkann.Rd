@@ -5,16 +5,8 @@
   Discretizes a date into an annum, using a starting day to specify the
   start of a season, and ends in the next year.
 }
-\synopsis{
-mkann(x, start.day, calendar)
-}
 \usage{
-# normal usage, where 'x' is a data.frame with a date column
-mkann(x)
-
-# all options
 mkann(x, start.day, calendar)
-
 }
 \arguments{
   \item{x}{A \code{data.frame} with a \code{date} column
@@ -27,7 +19,7 @@ mkann(x, start.day, calendar)
     \code{as.Date("2000-08-01")} for August 1st of any year); or it can
     be a day of the year, from 1--365}
   \item{calendar}{if unspecified, it will be attempted to be read from
-    \code{attr(x$date}); otherwise it is assumed to be a normal
+    \code{attr(x$date)}; otherwise it is assumed to be a normal
     proleptic Gregorian calendar; see \code{\link{year.length}}}
 }
 \details{
@@ -55,19 +47,19 @@ mkann(x, start.day, calendar)
   Returns \code{\link{factor}}s for each date given in \code{x}, grouped
   by each annum.
 }
-\author{M.W. Toews}
+\author{Mike Toews}
 \references{\url{http://en.wikipedia.org/wiki/Gregorian_calendar}}
 \seealso{\code{\link{mkseas}}, \code{\link{seas.sum}}}
 \examples{
 data(mscdata)
-dat <- mksub(mscdata,id=1108447)
-dat$ann1 <- mkann(dat,start.day=1)
-dat$ann2 <- mkann(dat,start.day=as.Date("2000-02-01"))
-dat$ann3 <- mkann(dat,start.day=as.Date("2000-08-01"))
+dat <- mksub(mscdata, id=1108447)
+dat$ann1 <- mkann(dat, start.day=1)
+dat$ann2 <- mkann(dat, start.day=as.Date("2000-02-01"))
+dat$ann3 <- mkann(dat, start.day=as.Date("2000-08-01"))
 table(dat$ann1)
 table(dat$ann2)
 table(dat$ann3)
-dat[26:36,c("date",paste("ann",1:3,sep=""))]
+dat[26:36, c("date", paste("ann", 1:3, sep=""))]
 }
 \keyword{utilities}
 \keyword{datagen}

@@ -2,9 +2,8 @@
 \alias{dathomog}
 \title{Homogenize daily data sets}
 \description{
-  Homogenizes daily data from two data sets into one data set;
-  optionally show cross-plots to examine how well correlated that data
-  sets are.
+  Homogenizes daily data from two data sets into one data set; optionally show
+  cross-plots to examine how well correlated that data sets are.
 }
 \usage{
 dathomog(x1, x2, by = "date", plot = FALSE)
@@ -24,7 +23,7 @@ dathomog(x1, x2, by = "date", plot = FALSE)
   \code{x1} will be used directly. Variables will be
   homogenized where their names are identical, found using
   \code{\link{names}}.
-  
+
   The cross-plots of the data are shown only for interest. They show
   useful correlation statistics, and a best-fit line using perpendicular
   offsets (which are preferred in this case over traditional linear
@@ -38,7 +37,7 @@ dathomog(x1, x2, by = "date", plot = FALSE)
   \code{\link{union}} of the names of \code{x1} and \code{x2}.
 }
 \references{http://mathworld.wolfram.com/LeastSquaresFittingPerpendicularOffsets.html}
-\author{M.W. Toews}
+\author{Mike Toews}
 \section{Warning}{
   Weather stations should be sufficiently close enough to approximate
   the same weather. This distance depends on the spatial distance and
@@ -46,12 +45,12 @@ dathomog(x1, x2, by = "date", plot = FALSE)
 }
 \examples{
 data(mscdata)
-dat1 <- mksub(mscdata,id=2100630)
-dat2 <- mksub(mscdata,id=1108447)
-plot.year(dat1)
-plot.year(dat2)
-newdata <- dathomog(dat1,dat2)
-plot.year(newdata)
+dat1 <- mksub(mscdata, id=2100630)
+dat2 <- mksub(mscdata, id=1108447)
+year.plot(dat1)
+year.plot(dat2)
+newdata <- dathomog(dat1, dat2)
+year.plot(newdata)
 message(paste(c("This is a rather poor example, since the",
                 "two stations are nowhere near each other"),
                 collapse="\n"))

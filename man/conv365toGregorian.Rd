@@ -6,9 +6,6 @@
   Gregorian calendar, repeating data from December 30th on a leap year
   to the remaining and missing December 31st.
 }
-\synopsis{
-conv365toGregorian(x)
-}
 \usage{
 conv365toGregorian(x)
 }
@@ -21,6 +18,6 @@ conv365toGregorian(x)
 \value{
   Returns a \code{\link{data.frame}} with Gregorian calendar dates.
 }
-\author{M.W. Toews}
+\author{Mike Toews}
 \keyword{utilities}
 \keyword{datagen}

@@ -6,17 +6,9 @@
   (among other things, such as recharge rates); this object has sums in
   each \sQuote{bin} of a season, as well as for each annum (or year).
 }
-\synopsis{
-seas.sum(x, var, width = 11, start.day=1, prime,
-     a.cut = 0.3, na.cut = 0.2)
-}
 \usage{
-# minimum usage
-seas.sum(x)
-
-# all options
-seas.sum(x, var, width = 11, start.day=1, prime,
-     a.cut = 0.3, na.cut = 0.2)
+seas.sum(x, var, width = 11, start.day = 1, prime,
+         a.cut = 0.3, na.cut = 0.2)
 }
 \arguments{
   \item{x}{a \code{data.frame} with daily variables to be summed,
@@ -24,7 +16,7 @@ seas.sum(x, var, width = 11, start.day=1, prime,
   \item{var}{the names of one or more variables in \code{x}, such as
     \code{c("rain","snow","precip")}}
   \item{width}{a number specifying the width of the bin (factor) in
-    days, or \code{"mon"} for Months (see \code{\link{mkseas}} for
+    days, or \code{"mon"} for months (see \code{\link{mkseas}} for
     others)}
   \item{start.day}{the first day of the season, specified as either a
     \code{\link{Date}} or as an integer day of the year; annual sums
@@ -48,18 +40,18 @@ seas.sum(x, var, width = 11, start.day=1, prime,
   normals of rates, such as precipitation and recharge. This function
   simply sums up each variable in each bin for each annum (or year), and
   provides the results in several arrays.
-  
+
   Sums are \emph{not} normalized, and represent a sum for the number of
   days in the bin (seasonal data) or annum (for annual data). Seasonal
   data can be normalized by the number of days (for a rate per day) or
   by the number of active days where \code{prime > a.cut}.
-  
+
   For annual sums, annums with \emph{many} missing values are ignored
   (receiving a value of \code{NA}) since it has insufficient data for a
   complete sum. The amount of allowable \code{NA} values per annum is
   controlled by \code{na.cut[1]}, which is a fraction of \code{NA}
   values for the whole annum (default is 0.2).
-  
+
   The seasonal sums are calculated independently from the annual
   sums. Individual bins from each year with \emph{many} missing values
   are ignored, where the amount of allowable \code{NA} values is
@@ -70,7 +62,7 @@ seas.sum(x, var, width = 11, start.day=1, prime,
 \section{Value}{ % for describe to work
   Returns a \code{seas.sum} object, which is a \code{\link{list}} with
   the following elements:
-  
+
   \describe{
     \item{\code{ann}:}{
       A \code{data.frame} of annual data; the columns are:
@@ -95,16 +87,17 @@ seas.sum(x, var, width = 11, start.day=1, prime,
 	  days, which is held in the \code{days} item}
       }
     }
-    \item{\code{active}:}{the number of \sQuote{active} days in the bin where the
-      prime variable is above \code{a.cut} (if used)}
-    \item{\code{days}:}{an array of the number of days in each bin; this array is
-      useful for normalizing the numbers in \code{seas} to comparable
-      units of mm/day}
+    \item{\code{active}:}{the number of \sQuote{active} days in the bin
+      where the prime variable is above \code{a.cut} (if used)}
+    \item{\code{days}:}{an array of the number of days in each bin; this
+      array is useful for normalizing the numbers in \code{seas} to
+      comparable units of mm/day}
     \item{\code{na}:}{number of missing days in each bin}
     \item{\code{start.day}:}{same as input}
-    \item{\code{years}:}{years (same as \code{ann[[1]]} and \code{seas[[1]]}); if
-      \code{start.day} is not 1, this represents the starting and ending
-      years (i.e., \code{1991_1992}) of each annum; see \code{\link{mkann}}}
+    \item{\code{years}:}{years (same as \code{ann[[1]]} and
+      \code{seas[[1]]}); if \code{start.day} is not 1, this represents the
+      starting and ending years (i.e., \code{1991_1992}) of each annum;
+      see \code{\link{mkann}}}
     \item{\code{var}:}{variable(s) which the sums represent (part of
       \code{ann[[2]]} and \code{seas[[3]]})}
     \item{\code{units}:}{a \code{\link{list}} of  units for each
@@ -120,16 +113,16 @@ seas.sum(x, var, width = 11, start.day=1, prime,
       \code{seas[[2]]})}
     \item{\code{bin.lengths}:}{the maximum length in days for each \code{bin}}
     \item{\code{year.range}:}{range of years from \code{x}}
-    \item{\code{precip.only}:}{value used in argument (modified if insufficient
-      data found in \code{x})}
+    \item{\code{precip.only}:}{value used in argument (modified if
+      insufficient data found in \code{x})}
     \item{\code{na.cut}:}{value used in argument}
-    \item{\code{a.cut}:}{value used in argument; if it is zero or \code{NA}, this
-      will be \code{FALSE}}
+    \item{\code{a.cut}:}{value used in argument; if it is zero or
+      \code{NA}, this will be \code{FALSE}}
     \item{\code{id}:}{from \code{attr(x,"id")} (\code{NULL} if not set)}
     \item{\code{name}:}{from \code{attr(x,"name")} (\code{NULL} if not set)}
   }
 }
-\author{M.W. Toews}
+\author{Mike Toews}
 \seealso{
   To view the result try \code{\link{image.seas.sum}}, or
   alternatively, \code{\link{plot.seas.sum}}
@@ -140,8 +133,8 @@ seas.sum(x, var, width = 11, start.day=1, prime,
 }
 \examples{
 data(mscdata)
-dat <- mksub(mscdata,id=1108447)
-dat.ss <- seas.sum(dat,width="mon")
+dat <- mksub(mscdata, id=1108447)
+dat.ss <- seas.sum(dat, width="mon")
 
 # Structure in R
 str(dat.ss)
@@ -155,23 +148,24 @@ dat.ss$seas[,2,] # or "Feb", if using English locale
 dat.ss$seas[,,"precip"]
 
 # Simple calculation on an array
-(monthly.mean <- apply(dat.ss$seas[,,"precip"],2,mean,na.rm=TRUE))
-barplot(monthly.mean,ylab="Mean monthly total (mm/month)",
+(monthly.mean <- apply(dat.ss$seas[,,"precip"], 2, mean,na.rm=TRUE))
+barplot(monthly.mean, ylab="Mean monthly total (mm/month)",
 	main="Un-normalized mean precipitation in Vancouver, BC")
-text(6.5,150,paste("Un-normalized rates given 'per month' should be",
+text(6.5, 150, paste("Un-normalized rates given 'per month' should be",
 	"avoided since ~3-9\% error is introduced",
-	"to the analysis between months",sep="\n"))
+	"to the analysis between months", sep="\n"))
 
 # Normalized precip
-norm.monthly <- dat.ss$seas[,,"precip"]/dat.ss$days
-norm.monthly.mean <- apply(norm.monthly,2,mean,na.rm=TRUE)
-print(round(norm.monthly,2))
-print(round(norm.monthly.mean,2))
-barplot(norm.monthly.mean,ylab="Normalized mean monthly total (mm/day)",
+norm.monthly <- dat.ss$seas[,,"precip"] / dat.ss$days
+norm.monthly.mean <- apply(norm.monthly, 2, mean,na.rm=TRUE)
+print(round(norm.monthly, 2))
+print(round(norm.monthly.mean, 2))
+barplot(norm.monthly.mean,
+    ylab="Normalized mean monthly total (mm/day)",
 	main="Normalized mean precipitation in Vancouver, BC")
 
 # Better graphics of data
-dat.ss <- seas.sum(dat,width=11)
+dat.ss <- seas.sum(dat, width=11)
 image(dat.ss)
 }
 \keyword{datagen}

@@ -17,7 +17,7 @@
   The sample file name is \file{A1128551.DLY}, which contains daily
   climate data from Vernon, British Columbia. Load this file using
   \code{\link{read.msc}}.
-  
+
   This file was created using the instructions below, with the addition
   of renaming the file extension from \file{*.ALL} to \file{*.DLY}.
 }
@@ -54,7 +54,7 @@
   \code{cat *.ALL > new.dly}). This cleans up the \R workspace by only
   using one object to refer to several stations. Stations can be
   referred to functions in \pkg{seas} using their IDs.
-  
+
   To import the archive file into \R:
   \enumerate{
     \item Start \R; type \code{library(seas)}
@@ -72,31 +72,31 @@
 \source{
   Data provided by the Meteorological Service of Canada
   (\url{http://www.msc.ec.gc.ca/}), with permission.
-  
+
   This data may only be reproduced for personal use; any other
   reproduction is permitted only with the written consent of Environment
   Canada (\url{http://climate.weatheroffice.ec.gc.ca/contacts/}).
 }
 \seealso{\code{\link{read.msc}}}
 \references{
-  \url{http://climate.weatheroffice.ec.gc.ca/prods_servs/documentation_index_e.html} MSC archive format description
+  \url{http://climate.weatheroffice.gc.ca/prods_servs/documentation_index_e.html} Technical Documentation - Documentation for the Digital Archive of Canadian Climatological Data (Surface) Identified By Element
 
-  \url{http://www.climate.weatheroffice.ec.gc.ca/prods_servs/cdcd_iso_e.html} CDCD CD-ROM download location
+  \url{http://climate.weatheroffice.gc.ca/prods_servs/index_e.html#cdcd} CDCD CD-ROM download location
 
   \url{http://dosbox.sourceforge.net} for emulating DOS on non-Microsoft
   platforms
 
   \url{http://www.intevation.de/~bernhard/archiv/uwm/canadian_climate_cdformat/} an alternative method of extracting data from the CDCD CD-ROMs using a Python module by Bernhard Reiter
 }
-\author{M.W. Toews}
+\author{Mike Toews}
 \examples{
-file <- system.file("data/A1128551.DLY",package="seas")
-print(file)
-dat <- read.msc(file)
+fname <- system.file("extdata", "A1128551.DLY", package="seas")
+print(fname)
+dat <- read.msc(fname)
 head(dat)
 str(dat)
 
-plot.seas.temp(dat)
-plot.year(dat)
+seas.temp.plot(dat)
+year.plot(dat)
 }
 \keyword{datasets}

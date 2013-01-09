@@ -6,14 +6,7 @@
   of days between precipitation events (dry days), and the number of
   days of continuous precipitation (wet days).
 }
-\synopsis{
-interarrival(x, var = "precip", p.cut = 0.3, inv = FALSE)
-}
 \usage{
-# minimum
-interarrival(x)
-
-# with optional arguments
 interarrival(x, var = "precip", p.cut = 0.3, inv = FALSE)
 }
 \arguments{
@@ -36,7 +29,7 @@ interarrival(x, var = "precip", p.cut = 0.3, inv = FALSE)
   \emph{dry} and \emph{wet} days relative to a single date. The date
   represents the first day of precipitation (if \code{inv=TRUE}, this
   convention is inverted to the first day of non-precipitation).
-  
+
   Missing or \code{NA} precipitation values voids the number of counted
   days between and within segments, which implies that days without
   precipitation need to explicitly have zeros.
@@ -48,7 +41,7 @@ interarrival(x, var = "precip", p.cut = 0.3, inv = FALSE)
   The table has \code{id} and \code{name} \link{attributes} (if
   available from \code{x}).
 }
-\author{M.W. Toews}
+\author{Mike Toews}
 \references{
   von Storch, H. and Zwiers, F.W., 1999, \emph{Statistical analysis in
     climate research}, Cambridge: Cambridge University Press, 484 p.
@@ -57,7 +50,7 @@ interarrival(x, var = "precip", p.cut = 0.3, inv = FALSE)
 \examples{
 data(mscdata)
 
-van.int <- interarrival(mksub(mscdata,id=1108447))
+van.int <- interarrival(mksub(mscdata, id=1108447))
 summary(van.int)
 van.int[which.max(van.int$dry),]
 van.int[which.max(van.int$wet),]
