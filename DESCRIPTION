@@ -1,7 +1,7 @@
 Package: seas
 Type: Package
-Version: 0.4-1
-Date: 2013-01-09
+Version: 0.4-2
+Date: 2013-06-20
 Title: Seasonal analysis and graphics, especially for climatology
 Author: Mike Toews
 Maintainer: Mike Toews <mwtoews@gmail.com>
@@ -18,6 +18,9 @@ Description: Capable of deriving seasonal statistics, such as
         to represent any time-varying parameter with a discernible
         seasonal signal, such as found in hydrology and ecology.
 License: BSD
-Packaged: 2013-01-08 11:41:37 UTC; mwtoews
+URL: http://github.com/mwtoews/seas
+BugReports: http://github.com/mwtoews/seas/issues
+Packaged: 2013-06-21 05:59:49 UTC; mwtoews
+NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2013-01-08 15:52:36
+Date/Publication: 2013-06-21 09:45:28
