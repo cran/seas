@@ -1,4 +1,4 @@
-9869ef30705fcdd2456ee9471f567fb8 *DESCRIPTION
+b5fd01475916b2e2289962a556fe2ce7 *DESCRIPTION
 f6bb33761983f7ea9e7f24a94fc2d61c *NAMESPACE
 634acaf5491f119357759f5b0f4522e9 *R/SeasOpts.R
 d9e42f020cec246e1a70e24e2b911f1b *R/change.R
@@ -24,14 +24,13 @@ ef88e6fb9c31cbb9136f4a98cf2c4118 *R/sdsm.R
 cbdf4e18a5dad1503ab06615811e6e19 *R/seas.sum.R
 cd7a7a98ad95c58c13f21c0f67ebe390 *R/seas.temp.plot.R
 747fa37a7734baf517d20ec9805b7337 *R/seas.var.plot.R
-234010aca13b3ffa5e8f55880948cebb *R/sysdata.rda
+40d40627c90b7a4c57de4aa1964c5c2a *R/sysdata.rda
 8f35abed806a59e4cf37a714cda5d23f *R/write.help.R
 a9ab862653a9eaf92afd79587c48a06d *R/year.length.R
 bbca9f1b74aaf4964e6561bb0cf866cd *R/year.plot.R
-af53f400d20126818172cafb9875ff99 *data/mscdata.rda
-234010aca13b3ffa5e8f55880948cebb *data/mscstn.rda
-c3fb8e9ddc8f4aa13d3e9ebe52d8808a *inst/CITATION
-5969c998e45f9415f14ad51d0528bd92 *inst/ChangeLog
+d9721375d5b751f07ec3f533273323f3 *data/mscdata.rda
+ea2954d44a431f997cbc471bf2f72a48 *inst/CITATION
+22d52e10afd72910b6ace546bdfa93c7 *inst/ChangeLog
 2a1d30af4e5d09426c48de1ed7b74adb *inst/extdata/A1128551.DLY
 bc82239bb67682479fa612af5c21a3b4 *inst/extdata/GF_2050s_ppt_SDSM.OUT
 fa4fe29d1bb35e4653c928e45dab419a *inst/extdata/summerland.dat
@@ -50,7 +49,7 @@ eca5f96e4da97b0dba996a5a38b7f0b4 *man/lars.Rd
 9630a4e34d6996948114e3c19c8663fe *man/mkseas.Rd
 c7b71ea17c86e220c81cb02b25658437 *man/mksub.Rd
 cd434267bb74ac8b1c00480043f9ce57 *man/mscdata.Rd
-65148d525a692e2f9f03f7e286e8f8a3 *man/mscstn.Rd
+9f64da59450dd1a6804d57ca803f1763 *man/mscstn.Rd
 63438f9be783d40fb2f95d41a9067ad1 *man/plot.interarrival.Rd
 adb9074b4ef5cabbca1adc86eb61934f *man/plot.seas.norm.Rd
 e591d2ea98391e817e06a4b77e944bd8 *man/plot.seas.sum.Rd
@@ -70,4 +69,4 @@ f3f0c48b0671af46c62dfd091bc37692 *man/year.length.Rd
 4997ed19034175438c537a5d1638e353 *po/fr/DESCRIPTION
 97b42d5ab99c4f78c6c91b8cf721f141 *po/fr/fr.gmo
 bcdfdc11162e207915de22d8c8e61a61 *po/fr/fr.po
-5c7ec0f5f424eee9b07144b90faf7cc8 *src/help.c
+1901e19151f5c56b3a88b696da6b57ce *src/help.c
