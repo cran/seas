@@ -1,12 +1,13 @@
 Package: seas
 Type: Package
-Version: 0.4-3
-Date: 2014-02-26
-Title: Seasonal analysis and graphics, especially for climatology
-Author: Mike Toews
+Version: 0.5-2
+Date: 2018-06-02
+Title: Seasonal Analysis and Graphics, Especially for Climatology
+Authors@R: person("Mike", "Toews", role = c("aut", "cre"),
+                  email = "mwtoews@gmail.com")
+Author: Mike Toews [aut, cre]
 Maintainer: Mike Toews <mwtoews@gmail.com>
-Depends: R(>= 2.10.0)
-Suggests: MASS
+Depends: R(>= 2.15.0), MASS
 Description: Capable of deriving seasonal statistics, such as "normals", and
   analysis of seasonal data, such as departures. This package also has
   graphics capabilities for representing seasonal data, including boxplots for
@@ -17,9 +18,9 @@ Description: Capable of deriving seasonal statistics, such as "normals", and
   time-varying parameter with a discernible seasonal signal, such as found
   in hydrology and ecology.
 License: GPL (>= 2)
-URL: http://github.com/mwtoews/seas
-BugReports: http://github.com/mwtoews/seas/issues
-Packaged: 2014-02-26 08:45:09 UTC; mwtoews
+URL: https://github.com/mwtoews/seas
+BugReports: https://github.com/mwtoews/seas/issues
 NeedsCompilation: yes
+Packaged: 2018-06-02 06:30:37 UTC; mtoews
 Repository: CRAN
-Date/Publication: 2014-02-26 10:20:40
+Date/Publication: 2018-06-02 06:52:57 UTC

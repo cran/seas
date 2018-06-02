@@ -2,6 +2,19 @@ This is a summary of changes to the 'seas' package for R.
 Please submit any suggestions, additions, or errors to:
 	Mike Toews <mwtoews@gmail.com>
 
+Version 0.5-2
+2018-06-02
+ - bump minimum version to R 2.15
+ - improve 'read.msc' to remove duplicate records from archive file and
+   report missing elements
+ - ignore 'format' parameter for 'read.msc'
+ - DESCRIPTION files with Authors@R (fixes #4)
+ - update or remove URLs
+ - swtich Rd encoding to UTF-8
+ - change title to title case
+ - modify MASS from suggests to depends
+ - register dynamic symbols (fixes #3)
+
 Version 0.4-3
 2014-02-26
  - fix a clang warning for potentially insecure formatting in help.c

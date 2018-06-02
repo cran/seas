@@ -22,8 +22,8 @@ write.sdsm(dat, var, start, end, file = "")
   \item{var}{name of variable to be written from \code{dat}}
   \item{calendar}{calender used for data; if unspecified, this is
     assumed to be proleptic Gregorian (normal); however, for CCCma
-    models this should be "365\_day", and for Hadley models this should
-    be "360\_day"; see \code{\link{year.length}}}
+    models this should be "365_day", and for Hadley models this should
+    be "360_day"; see \code{\link{year.length}}}
 }
 \details{
   This function readings and writes climate data with the
@@ -41,17 +41,17 @@ write.sdsm(dat, var, start, end, file = "")
 }
 \author{Mike Toews}
 \references{
-  Wilby, R.L., Dawson, C.W. and Barrow, E.M. 2002,
-  \sQuote{SDSM - a decision support tool for the assessment of regional
-    climate change impacts}, \emph{Environmental Modelling Software},
-  \bold{77}, 473--471.
+  Wilby, R.L., Dawson, C.W. and Barrow, E.M. 2002.
+  SDSM --- a decision support tool for the assessment of regional
+  climate change impacts, \emph{Environmental Modelling Software},
+  \bold{17} (2), 145--157, \doi{10.1016/S1364-8152(01)00060-3}
 
   SDSM can be downloaded free-of-charge for Windows platforms from \cr
-  \url{http://co-public.lboro.ac.uk/cocwd/SDSM/}
+  \url{https://www.sdsm.org.uk/}
 
   CGCM1 and HADCM3 model data for SDSM can be downloaded from the
   Canadian Climate Impacts and Scenarios website: \cr
-  \url{http://www.cics.uvic.ca/scenarios/sdsm/select.cgi}
+  \url{https://web.archive.org/web/20120218192015/http://www.cics.uvic.ca/scenarios/sdsm/select.cgi} (archived)
 }
 \seealso{\code{\link{read.msc}}, \code{\link{change}}}
 \examples{

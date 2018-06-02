@@ -1,12 +1,13 @@
 /* Included with seas package for R
- * (c) Mike Toews 2007, 2013
- * License: BSD
+ * (c) Mike Toews 2007-2018
+ * License: GPL (>= 2)
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <R.h>
 #include <Rinternals.h>
+#include <R_ext/Rdynload.h>
 
 void writeHELP(char **filename, char **header, int *type, int *startyear,
                int *nyear, double *val)
@@ -87,4 +88,17 @@ void writeHELP(char **filename, char **header, int *type, int *startyear,
     }
 
     fclose(fp);
+}
+
+/* RegisteringDynamic Symbols */
+static R_NativePrimitiveArgType writeHELP_t[] = {
+  STRSXP, STRSXP, INTSXP, INTSXP, INTSXP, REALSXP
+};
+static const R_CMethodDef cMethods[] = {
+  {"writeHELP", (DL_FUNC) &writeHELP, 6, writeHELP_t},
+  {NULL, NULL, 0, NULL}
+};
+void R_init_seas(DllInfo* info) {
+  R_registerRoutines(info, cMethods, NULL, NULL, NULL);
+  R_useDynamicSymbols(info, TRUE);
 }
