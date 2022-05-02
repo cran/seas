@@ -1,12 +1,11 @@
 Package: seas
 Type: Package
-Version: 0.5-2
-Date: 2018-06-02
+Version: 0.6-0
+Date: 2022-05-01
 Title: Seasonal Analysis and Graphics, Especially for Climatology
 Authors@R: person("Mike", "Toews", role = c("aut", "cre"),
-                  email = "mwtoews@gmail.com")
-Author: Mike Toews [aut, cre]
-Maintainer: Mike Toews <mwtoews@gmail.com>
+                  email = "mwtoews@gmail.com",
+                  comment = c(ORCID = "0000-0003-3657-7963"))
 Depends: R(>= 2.15.0), MASS
 Description: Capable of deriving seasonal statistics, such as "normals", and
   analysis of seasonal data, such as departures. This package also has
@@ -21,6 +20,8 @@ License: GPL (>= 2)
 URL: https://github.com/mwtoews/seas
 BugReports: https://github.com/mwtoews/seas/issues
 NeedsCompilation: yes
-Packaged: 2018-06-02 06:30:37 UTC; mtoews
+Packaged: 2022-05-01 09:49:42 UTC; mtoews
+Author: Mike Toews [aut, cre] (<https://orcid.org/0000-0003-3657-7963>)
+Maintainer: Mike Toews <mwtoews@gmail.com>
 Repository: CRAN
-Date/Publication: 2018-06-02 06:52:57 UTC
+Date/Publication: 2022-05-02 09:30:02 UTC
